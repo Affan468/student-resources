@@ -10,7 +10,7 @@ export const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB limit
  */
 export function validateFileSize(file) {
   if (!file) return { valid: false, error: 'No file selected.' };
-  
+
   if (file.size > MAX_FILE_SIZE_BYTES) {
     const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
     return {
@@ -96,7 +96,7 @@ async function compressPdfFile(file) {
 
     // Iterate through all indirect objects in the PDF context to find and ultra-compress embedded images
     const indirectObjects = pdfDoc.context.enumerateIndirectObjects();
-    
+
     for (const [ref, obj] of indirectObjects) {
       if (obj instanceof PDFRawStream && obj.dict) {
         const subtype = obj.dict.get(PDFName.of('Subtype'));
@@ -113,7 +113,7 @@ async function compressPdfFile(file) {
 
               // Ultra 35% JPEG quality grayscale stream compression
               const compressedImg = await compressImageFile(imgFile, 0.35);
-              
+
               if (compressedImg && compressedImg.size < imageBytes.length) {
                 const compressedBuffer = await compressedImg.arrayBuffer();
                 obj.contents = new Uint8Array(compressedBuffer);
@@ -167,7 +167,7 @@ export async function compressDocumentFile(file) {
     } catch (e) {
       console.warn('Image compression notice:', e);
     }
-  } 
+  }
   // 2. PDF Document compression (Ultra 90% stream + image compression)
   else if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
     try {

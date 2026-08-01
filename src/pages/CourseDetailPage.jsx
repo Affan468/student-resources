@@ -89,9 +89,6 @@ export default function CourseDetailPage() {
             <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-[#59a5fb]/15 border border-[#59a5fb]/30 text-[#59a5fb] font-mono">
               {activeCourse.code}
             </span>
-            <span className="text-xs font-semibold text-slate-500">
-              {activeCourse.creditHours} Credit Hours
-            </span>
             <span className="text-xs font-semibold text-[#9D00FF] bg-[#9D00FF]/10 border border-[#9D00FF]/20 px-3 py-1 rounded-full">
               {activeCourse.department}
             </span>
