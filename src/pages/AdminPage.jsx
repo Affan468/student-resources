@@ -5,13 +5,13 @@ import AdminQueueTable from '../components/admin/AdminQueueTable';
 import AddCourseModal from '../components/admin/AddCourseModal';
 import AddInstructorModal from '../components/admin/AddInstructorModal';
 import CourseContentModal from '../components/admin/CourseContentModal';
-import { 
-  ShieldCheck, 
-  Lock, 
-  CheckCircle2, 
-  Clock, 
-  Download, 
-  KeyRound, 
+import {
+  ShieldCheck,
+  Lock,
+  CheckCircle2,
+  Clock,
+  Download,
+  KeyRound,
   AlertCircle,
   PlusCircle,
   UserPlus,
@@ -24,16 +24,16 @@ import {
 } from 'lucide-react';
 
 export default function AdminPage() {
-  const { 
-    pendingUploads, 
-    resources, 
+  const {
+    pendingUploads,
+    resources,
     courses,
     instructors,
     deleteCourse,
     deleteInstructor,
     updateCourseDepartment,
     getInstructorsForCourse,
-    showToast 
+    showToast
   } = useResource();
 
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -130,7 +130,7 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      
+
       {/* Header */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#f0f7ff] via-[#f8efff] to-white border border-slate-200 p-6 sm:p-10 shadow-xl">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#9D00FF]/10 rounded-full blur-3xl pointer-events-none" />
@@ -212,11 +212,10 @@ export default function AdminPage() {
       <div className="flex items-center space-x-2 border-b border-slate-200 pb-3">
         <button
           onClick={() => setActiveTab('queue')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
-            activeTab === 'queue'
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${activeTab === 'queue'
               ? 'bg-slate-900 text-white shadow-md'
               : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-          }`}
+            }`}
         >
           <Clock className="w-4 h-4 text-amber-400" />
           <span>Review Queue ({totalPending})</span>
@@ -224,11 +223,10 @@ export default function AdminPage() {
 
         <button
           onClick={() => setActiveTab('courses')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
-            activeTab === 'courses'
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${activeTab === 'courses'
               ? 'bg-[#59a5fb] text-white shadow-md shadow-[#59a5fb]/20'
               : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-          }`}
+            }`}
         >
           <BookOpen className="w-4 h-4" />
           <span>Manage Courses ({courses.length})</span>
@@ -236,11 +234,10 @@ export default function AdminPage() {
 
         <button
           onClick={() => setActiveTab('instructors')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
-            activeTab === 'instructors'
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${activeTab === 'instructors'
               ? 'bg-[#9D00FF] text-white shadow-md shadow-[#9D00FF]/20'
               : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-          }`}
+            }`}
         >
           <Users className="w-4 h-4" />
           <span>Manage Instructors ({instructors.length})</span>
@@ -436,14 +433,14 @@ export default function AdminPage() {
               }
 
               return filteredInstructors.map(inst => (
-                <div 
+                <div
                   key={inst.id}
                   className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-white hover:shadow-md transition-all"
                 >
                   <div className="flex items-center space-x-3">
-                    <img 
-                      src={inst.avatar} 
-                      alt={inst.name} 
+                    <img
+                      src={inst.avatar}
+                      alt={inst.name}
                       className="w-11 h-11 rounded-xl object-cover border border-slate-200 shrink-0"
                     />
                     <div>

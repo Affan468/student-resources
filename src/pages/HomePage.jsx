@@ -11,10 +11,10 @@ import {
 } from 'lucide-react';
 
 const DEPARTMENTS = [
-  'All', 
-  'Computer Engineering (CE)', 
-  'Electrical Engineering (EE)', 
-  'Electrical & Electronics Engineering (EEE)'
+  { label: 'All', full: 'All' }, 
+  { label: 'CE', full: 'Computer Engineering (CE)' }, 
+  { label: 'EE', full: 'Electrical Engineering (EE)' }, 
+  { label: 'EEE', full: 'Electrical & Electronics Engineering (EEE)' }
 ];
 
 export default function HomePage() {
@@ -30,14 +30,15 @@ export default function HomePage() {
   const displayedCourses = filteredCourses.filter(course => {
     if (selectedDept === 'All') return true;
     if (course.department === 'All Majors (CE, EE & EEE)' || course.department === 'All') return true;
-    return course.department === selectedDept;
+    const target = DEPARTMENTS.find(d => d.label === selectedDept);
+    return course.department === target?.full || course.department === selectedDept;
   });
 
-  const getCourseCountForDept = (dept) => {
+  const getCourseCountForDept = (deptObj) => {
     return filteredCourses.filter(course => {
-      if (dept === 'All') return true;
+      if (deptObj.label === 'All') return true;
       if (course.department === 'All Majors (CE, EE & EEE)' || course.department === 'All') return true;
-      return course.department === dept;
+      return course.department === deptObj.full || course.department === deptObj.label;
     }).length;
   };
 
@@ -94,21 +95,23 @@ export default function HomePage() {
 
           {/* Engineering Department Filter Tabs with Course Counts */}
           <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 lg:pb-0 no-scrollbar">
-            {DEPARTMENTS.map((dept) => {
-              const count = getCourseCountForDept(dept);
+            {DEPARTMENTS.map((deptObj) => {
+              const count = getCourseCountForDept(deptObj);
+              const isSelected = selectedDept === deptObj.label;
               return (
                 <button
-                  key={dept}
-                  onClick={() => setSelectedDept(dept)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-                    selectedDept === dept
+                  key={deptObj.label}
+                  onClick={() => setSelectedDept(deptObj.label)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                    isSelected
                       ? 'bg-gradient-to-r from-[#59a5fb] to-[#9D00FF] text-white font-extrabold shadow-md shadow-[#9D00FF]/20'
                       : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 border border-slate-200'
                   }`}
+                  title={deptObj.full}
                 >
-                  <span>{dept}</span>
+                  <span>{deptObj.label}</span>
                   <span className={`px-1.5 py-0.2 text-[10px] font-bold rounded-full ${
-                    selectedDept === dept
+                    isSelected
                       ? 'bg-white/20 text-white'
                       : 'bg-slate-200 text-slate-700'
                   }`}>
