@@ -33,6 +33,14 @@ export default function HomePage() {
     return course.department === selectedDept;
   });
 
+  const getCourseCountForDept = (dept) => {
+    return filteredCourses.filter(course => {
+      if (dept === 'All') return true;
+      if (course.department === 'All Majors (CE, EE & EEE)' || course.department === 'All') return true;
+      return course.department === dept;
+    }).length;
+  };
+
   return (
     <div className="space-y-8 sm:space-y-10 animate-fade-in pb-12">
       
@@ -64,12 +72,6 @@ export default function HomePage() {
             >
               <Upload className="w-3.5 h-3.5" /> Upload Document
             </button>
-            <button 
-              onClick={() => navigateTo('admin')}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#9D00FF]/10 border border-[#9D00FF]/30 text-[#9D00FF] hover:bg-[#9D00FF] hover:text-white text-[11px] sm:text-xs font-semibold transition-all shadow-sm"
-            >
-              <ShieldCheck className="w-3.5 h-3.5" /> Admin Moderation
-            </button>
           </div>
         </div>
       </section>
@@ -90,21 +92,31 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Engineering Department Filter Tabs */}
+          {/* Engineering Department Filter Tabs with Course Counts */}
           <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 lg:pb-0 no-scrollbar">
-            {DEPARTMENTS.map((dept) => (
-              <button
-                key={dept}
-                onClick={() => setSelectedDept(dept)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                  selectedDept === dept
-                    ? 'bg-gradient-to-r from-[#59a5fb] to-[#9D00FF] text-white font-extrabold shadow-md shadow-[#9D00FF]/20'
-                    : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 border border-slate-200'
-                }`}
-              >
-                {dept}
-              </button>
-            ))}
+            {DEPARTMENTS.map((dept) => {
+              const count = getCourseCountForDept(dept);
+              return (
+                <button
+                  key={dept}
+                  onClick={() => setSelectedDept(dept)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                    selectedDept === dept
+                      ? 'bg-gradient-to-r from-[#59a5fb] to-[#9D00FF] text-white font-extrabold shadow-md shadow-[#9D00FF]/20'
+                      : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 border border-slate-200'
+                  }`}
+                >
+                  <span>{dept}</span>
+                  <span className={`px-1.5 py-0.2 text-[10px] font-bold rounded-full ${
+                    selectedDept === dept
+                      ? 'bg-white/20 text-white'
+                      : 'bg-slate-200 text-slate-700'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
