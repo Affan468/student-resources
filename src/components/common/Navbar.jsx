@@ -82,23 +82,6 @@ export default function Navbar() {
               <Upload className="w-4 h-4" />
               <span>Upload Document</span>
             </button>
-
-            <button
-              onClick={() => handleNavClick('admin')}
-              className={`relative flex items-center space-x-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
-                currentView === 'admin'
-                  ? 'bg-[#9D00FF]/15 text-[#9D00FF] border border-[#9D00FF]/30'
-                  : 'text-slate-700 hover:text-[#9D00FF] hover:bg-slate-100'
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4 text-[#9D00FF]" />
-              <span>Admin Portal</span>
-              {pendingCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#9D00FF] text-white font-extrabold text-[11px] w-5 h-5 rounded-full flex items-center justify-center shadow-md animate-pulse">
-                  {pendingCount}
-                </span>
-              )}
-            </button>
           </nav>
 
           {/* Mobile Menu Hamburger Button */}
@@ -144,25 +127,6 @@ export default function Navbar() {
             >
               <Upload className="w-4 h-4" />
               <span>Upload Past Paper / Quiz</span>
-            </button>
-
-            <button
-              onClick={() => handleNavClick('admin')}
-              className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold ${
-                currentView === 'admin'
-                  ? 'bg-[#9D00FF]/15 text-[#9D00FF] border border-[#9D00FF]/30'
-                  : 'bg-slate-50 text-slate-800 border border-slate-200'
-              }`}
-            >
-              <div className="flex items-center space-x-3">
-                <ShieldCheck className="w-4 h-4 text-[#9D00FF]" />
-                <span>Admin Review Portal</span>
-              </div>
-              {pendingCount > 0 && (
-                <span className="bg-[#9D00FF] text-white font-extrabold text-xs px-2 py-0.5 rounded-full">
-                  {pendingCount}
-                </span>
-              )}
             </button>
           </div>
         </div>

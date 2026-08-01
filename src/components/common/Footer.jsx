@@ -37,11 +37,6 @@ export default function Footer() {
                   Upload Past Papers & Notes
                 </button>
               </li>
-              <li>
-                <button onClick={() => navigateTo('admin')} className="hover:text-[#9D00FF] transition-colors">
-                  Admin Moderation Queue
-                </button>
-              </li>
             </ul>
           </div>
 
@@ -65,7 +60,16 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-slate-200 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} COMSATS University Islamabad Resource Hub.</p>
+          <p className="flex items-center gap-1.5">
+            <span>© {new Date().getFullYear()} COMSATS University Islamabad Resource Hub.</span>
+            <button
+              onClick={() => navigateTo('admin')}
+              className="text-slate-300 hover:text-slate-600 transition-colors p-0.5"
+              aria-label="Admin Portal"
+            >
+              🔒
+            </button>
+          </p>
           <p className="flex items-center gap-1 mt-2 sm:mt-0">
             Designed for <span className="text-[#9D00FF] font-semibold">COMSATS Students</span>
           </p>

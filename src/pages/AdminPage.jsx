@@ -35,7 +35,9 @@ export default function AdminPage() {
     showToast 
   } = useResource();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return sessionStorage.getItem('admin_session_auth') === 'true';
+  });
   const [passkey, setPasskey] = useState('');
   const [authError, setAuthError] = useState(false);
 
@@ -61,6 +63,7 @@ export default function AdminPage() {
   const handleLogin = (e) => {
     e.preventDefault();
     if (passkey === 'notsoeasypass') {
+      sessionStorage.setItem('admin_session_auth', 'true');
       setIsAuthenticated(true);
       setAuthError(false);
       showToast('Admin Portal Unlocked', 'success');
