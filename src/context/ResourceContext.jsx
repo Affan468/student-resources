@@ -92,7 +92,7 @@ export function ResourceProvider({ children }) {
           console.log('[COMSATS Vault] Remote Resources Loaded from Supabase DB:', remoteResources.length);
           const approved = remoteResources.filter(r => r.status === 'approved' || !r.status);
           const pending = remoteResources.filter(r => r.status === 'pending');
-          setResources(prev => deduplicateById([...approved, ...prev]));
+          setResources(approved);
           setPendingUploads(pending);
         } else {
           // Auto-sync initial resources & pending uploads to Supabase

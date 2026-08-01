@@ -195,7 +195,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Library Archive',
-    downloadsCount: 342,
+    downloadsCount: 0,
     createdAt: '2024-05-15',
     downloadContent: 'COMSATS UNIVERSITY ISLAMABAD\nDEPARTMENT OF COMPUTER ENGINEERING (CE)\nDATA STRUCTURES & ALGORITHMS - CSC211\nMIDTERM SPRING 2024\n\nQ1. Implement AVL Tree Rotation\nQ2. Explain Heapify Algorithm...'
   },
@@ -212,7 +212,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Library Archive',
-    downloadsCount: 512,
+    downloadsCount: 0,
     createdAt: '2024-01-10',
     downloadContent: 'COMSATS UNIVERSITY ISLAMABAD\nDATA STRUCTURES FINAL EXAM FALL 2023\nTime: 3 Hours | Max Marks: 80...'
   },
@@ -229,7 +229,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Ali Raza (Class Rep)',
-    downloadsCount: 219,
+    downloadsCount: 0,
     createdAt: '2024-03-20',
     downloadContent: 'DSA Quiz 1: Stack & Queue Implementation in C++...'
   },
@@ -246,7 +246,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'docx',
     status: 'approved',
     uploaderName: 'Ahmed Malik',
-    downloadsCount: 188,
+    downloadsCount: 0,
     createdAt: '2024-04-02',
     downloadContent: 'Assignment 1: Doubly Linked List Operations & Space Complexity Analysis...'
   },
@@ -264,7 +264,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Ayesha Khan',
-    downloadsCount: 420,
+    downloadsCount: 0,
     createdAt: '2024-06-12',
     downloadContent: 'COMSATS DBS Terminal Paper Spring 2024. ER Diagram to Relational Schema Mapping & SQL Join Queries...'
   },
@@ -281,7 +281,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Bilal Hassan',
-    downloadsCount: 156,
+    downloadsCount: 0,
     createdAt: '2024-04-18',
     downloadContent: 'Database Systems Quiz Collection: 1NF, 2NF, 3NF, BCNF Normalization Problems...'
   },
@@ -298,7 +298,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Hamza Sohail',
-    downloadsCount: 230,
+    downloadsCount: 0,
     createdAt: '2023-11-25',
     downloadContent: 'Assignment 3: Stored Procedures, Views, and PL/SQL Triggers...'
   },
@@ -316,7 +316,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Zainab Bibi',
-    downloadsCount: 389,
+    downloadsCount: 0,
     createdAt: '2023-10-30',
     downloadContent: 'OS Midterm Paper: CPU Scheduling Algorithms (Round Robin, SJF, Priority) & Synchronization Deadlocks...'
   },
@@ -333,7 +333,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'zip',
     status: 'approved',
     uploaderName: 'Usman Ghani',
-    downloadsCount: 205,
+    downloadsCount: 0,
     createdAt: '2024-03-14',
     downloadContent: 'C Source Code & Lab Report for Producer-Consumer Problem using Semaphores...'
   },
@@ -351,7 +351,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'CE Society COMSATS',
-    downloadsCount: 670,
+    downloadsCount: 0,
     createdAt: '2024-05-01',
     downloadContent: 'OOP Solved Papers Pack: Virtual Functions, Abstract Classes, Template Metaprogramming...'
   },
@@ -369,7 +369,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'docx',
     status: 'approved',
     uploaderName: 'Dr. Muhammad Asif',
-    downloadsCount: 284,
+    downloadsCount: 0,
     createdAt: '2024-03-25',
     downloadContent: 'DSA Lab Assignment 1: Implement BST Insertion, Deletion, and In-Order Traversal in C++...'
   },
@@ -386,7 +386,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Department Archive',
-    downloadsCount: 450,
+    downloadsCount: 0,
     createdAt: '2024-02-10',
     downloadContent: 'COMSATS DSA Lab Manual: 14 Lab Experiments covering Stacks, Queues, Graphs, and Hash Tables...'
   },
@@ -403,7 +403,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Dr. Muhammad Asif',
-    downloadsCount: 310,
+    downloadsCount: 0,
     createdAt: '2024-04-15',
     downloadContent: 'Lecture Slides: Graph Representations, Adjacency List vs Matrix, Shortest Path Algorithms...'
   },
@@ -420,7 +420,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Dr. Sarah Ahmed',
-    downloadsCount: 380,
+    downloadsCount: 0,
     createdAt: '2024-02-18',
     downloadContent: 'DBS Lab Manual: Hands-on SQL queries, DDL, DML, Joins, and Subqueries in Oracle...'
   },
@@ -437,7 +437,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'zip',
     status: 'approved',
     uploaderName: 'Engr. Ali Raza',
-    downloadsCount: 215,
+    downloadsCount: 0,
     createdAt: '2024-04-05',
     downloadContent: 'OS Lab Assignment: Multi-threaded producer-consumer task using pthread mutex and condition variables...'
   },
@@ -454,7 +454,7 @@ export const INITIAL_RESOURCES = [
     fileType: 'pdf',
     status: 'approved',
     uploaderName: 'Prof. Hassan Mahmood',
-    downloadsCount: 295,
+    downloadsCount: 0,
     createdAt: '2024-03-30',
     downloadContent: 'OOP Lecture Notes: Dynamic Binding, vtables, Pure Virtual Functions, and Abstract Base Classes...'
   }
