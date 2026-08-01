@@ -31,6 +31,7 @@ export default function AdminPage() {
     instructors,
     deleteCourse,
     deleteInstructor,
+    updateCourseDepartment,
     getInstructorsForCourse,
     showToast 
   } = useResource();
@@ -336,9 +337,16 @@ export default function AdminPage() {
                           {course.abbreviation || '-'}
                         </td>
                         <td className="py-3 px-4">
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-                            {course.department}
-                          </span>
+                          <select
+                            value={course.department || 'All Majors (CE, EE & EEE)'}
+                            onChange={(e) => updateCourseDepartment(course.id, e.target.value)}
+                            className="px-2.5 py-1 rounded-xl text-[11px] font-bold bg-slate-100 border border-slate-200 text-slate-700 hover:bg-[#59a5fb]/10 hover:text-[#59a5fb] hover:border-[#59a5fb]/30 focus:outline-none focus:ring-2 focus:ring-[#59a5fb] cursor-pointer transition-all"
+                          >
+                            <option value="All Majors (CE, EE & EEE)">All Majors (CE, EE & EEE)</option>
+                            <option value="Computer Engineering (CE)">Computer Engineering (CE)</option>
+                            <option value="Electrical Engineering (EE)">Electrical Engineering (EE)</option>
+                            <option value="Electrical & Electronics Engineering (EEE)">Electrical & Electronics (EEE)</option>
+                          </select>
                         </td>
                         <td className="py-3 px-4 text-[#59a5fb] font-bold">
                           {resources.filter(r => r.courseId === course.id).length} files

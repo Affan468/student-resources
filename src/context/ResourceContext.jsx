@@ -409,6 +409,21 @@ export function ResourceProvider({ children }) {
     return newCourse;
   };
 
+  // Update course department/major classification by admin
+  const updateCourseDepartment = async (courseId, newDepartment) => {
+    const target = courses.find(c => c.id === courseId);
+    if (!target) return;
+
+    const updatedCourse = {
+      ...target,
+      department: newDepartment
+    };
+
+    setCourses(prev => prev.map(c => c.id === courseId ? updatedCourse : c));
+    await saveCourseToSupabase(updatedCourse);
+    showToast(`Updated "${target.code}" department to "${newDepartment}"`, 'success');
+  };
+
   // Add new instructor by admin
   const addInstructor = (instData) => {
     const instId = `inst-${Date.now()}`;
@@ -521,6 +536,7 @@ export function ResourceProvider({ children }) {
       addInstructor,
       deleteCourse,
       deleteInstructor,
+      updateCourseDepartment,
       deleteResource,
       incrementDownloads,
       toast,
