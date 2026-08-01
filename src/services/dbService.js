@@ -31,6 +31,7 @@ export async function fetchResourcesFromSupabase() {
       uploaderName: row.uploader_name,
       url: row.url,
       downloadsCount: row.downloads_count || 0,
+      fileHash: row.file_hash || null,
       status: row.status || 'approved',
       createdAt: row.created_at ? new Date(row.created_at).toLocaleDateString() : new Date().toLocaleDateString()
     }));
@@ -61,6 +62,7 @@ export async function saveResourceToSupabase(resource) {
       url: (resource.url && resource.url.startsWith('data:')) ? '' : (resource.url || ''),
       status: resource.status || 'approved',
       downloads_count: resource.downloadsCount || 0,
+      file_hash: resource.fileHash || null,
       created_at: new Date().toISOString()
     };
 

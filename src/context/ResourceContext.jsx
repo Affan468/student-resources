@@ -287,6 +287,33 @@ export function ResourceProvider({ children }) {
     );
   };
 
+  // Check for duplicate uploads by SHA-256 hash or normalized title
+  const checkDuplicateUpload = (fileHash, courseId, title, category) => {
+    const normTitle = (title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+    // 1. Check SHA-256 exact binary file match
+    if (fileHash) {
+      const matchHash = [...resources, ...pendingUploads].find(r => r.fileHash && r.fileHash === fileHash);
+      if (matchHash) {
+        return { isDuplicate: true, reason: `Exact identical PDF file already uploaded ("${matchHash.title}")` };
+      }
+    }
+
+    // 2. Check Course + Category + Normalized Title match
+    if (normTitle && courseId) {
+      const matchTitle = [...resources, ...pendingUploads].find(r => 
+        r.courseId === courseId && 
+        r.category === category && 
+        (r.title || '').toLowerCase().replace(/[^a-z0-9]/g, '') === normTitle
+      );
+      if (matchTitle) {
+        return { isDuplicate: true, reason: `A document titled "${matchTitle.title}" already exists for this course` };
+      }
+    }
+
+    return { isDuplicate: false };
+  };
+
   // Submit student upload (enters pending queue)
   const submitUpload = (uploadData) => {
     const uploadId = `upload-${Date.now()}`;
@@ -312,6 +339,7 @@ export function ResourceProvider({ children }) {
       notes: uploadData.notes || '',
       createdAt: new Date().toISOString().split('T')[0],
       downloadsCount: 0,
+      fileHash: uploadData.fileHash || null,
       url: uploadData.url || '',
       rawFile: uploadData.rawFile || null,
       downloadContent: uploadData.downloadContent || `Content for ${uploadData.title}`
@@ -529,6 +557,7 @@ export function ResourceProvider({ children }) {
       getInstructorsForCourse,
       getInstructorResources,
       getCategoryResources,
+      checkDuplicateUpload,
       submitUpload,
       approveUpload,
       rejectUpload,
