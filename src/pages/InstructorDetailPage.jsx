@@ -13,6 +13,7 @@ import {
   Presentation
 } from 'lucide-react';
 import { downloadInstructorResourcesZip } from '../services/zipGenerator';
+import useSEO from '../hooks/useSEO';
 
 export default function InstructorDetailPage() {
   const { 
@@ -25,6 +26,11 @@ export default function InstructorDetailPage() {
 
   const [isZipping, setIsZipping] = useState(false);
   const [zipProgress, setZipProgress] = useState(0);
+
+  useSEO({
+    title: activeInstructor ? `${activeInstructor.name} (${activeInstructor.title || 'Faculty'})` : 'Instructor Profile',
+    description: activeInstructor ? `Study materials, past exam papers, sessional quizzes, and lab manuals provided by ${activeInstructor.name} at COMSATS University.` : 'Faculty instructor profile page'
+  });
 
   if (!activeInstructor) {
     return (
@@ -150,20 +156,20 @@ export default function InstructorDetailPage() {
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigateTo('course-detail', { courseId: activeCourse?.id })}
-          className="flex items-center space-x-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm"
+          className="flex items-center space-x-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-xl shadow-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Course Instructors</span>
         </button>
 
-        <div className="text-xs text-slate-500 font-mono">
-          {activeCourse?.code} / <span className="text-[#9D00FF] font-semibold">{activeInstructor.name}</span>
+        <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+          {activeCourse?.code} / <span className="text-[#9D00FF] dark:text-[#c06eff] font-semibold">{activeInstructor.name}</span>
         </div>
       </div>
 
       {/* Instructor Banner Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#f0f7ff] via-[#f8efff] to-white border border-slate-200 p-8 sm:p-10 shadow-xl">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-[#9D00FF]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#f0f7ff] via-[#f8efff] to-white dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800 border border-slate-200 dark:border-slate-800 p-8 sm:p-10 shadow-xl">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[#9D00FF]/10 dark:bg-[#9D00FF]/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           
@@ -175,12 +181,12 @@ export default function InstructorDetailPage() {
             />
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">{activeInstructor.name}</h1>
-                <UserCheck className="w-5 h-5 text-[#9D00FF]" />
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">{activeInstructor.name}</h1>
+                <UserCheck className="w-5 h-5 text-[#9D00FF] dark:text-[#c06eff]" />
               </div>
-              <p className="text-sm font-semibold text-[#9D00FF]">{activeInstructor.title}</p>
-              <p className="text-xs text-slate-500">{activeInstructor.department} • COMSATS University</p>
-              <p className="text-xs text-slate-600 pt-1 max-w-xl">{activeInstructor.bio}</p>
+              <p className="text-sm font-semibold text-[#9D00FF] dark:text-[#c06eff]">{activeInstructor.title}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{activeInstructor.department} • COMSATS University</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300 pt-1 max-w-xl">{activeInstructor.bio}</p>
             </div>
           </div>
 
@@ -198,7 +204,7 @@ export default function InstructorDetailPage() {
                   : `Download All Resources (.ZIP)`}
               </span>
             </button>
-            <span className="text-[11px] text-slate-500 text-center md:text-right font-medium">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 text-center md:text-right font-medium">
               Bundles {allInstructorResources.length} files into 1 compressed ZIP archive
             </span>
           </div>
@@ -207,12 +213,12 @@ export default function InstructorDetailPage() {
 
       {/* Category Selection Cards Section */}
       <section className="space-y-6">
-        <div className="border-b border-slate-200 pb-4">
-          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-[#59a5fb]" />
+        <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <FileText className="w-5 h-5 text-[#59a5fb] dark:text-[#7bb9fc]" />
             <span>Select Resource Category</span>
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Click on a category below to browse and download specific past papers, quizzes, or assignments.
           </p>
         </div>
@@ -228,19 +234,19 @@ export default function InstructorDetailPage() {
                   instructorId: activeInstructor.id, 
                   category: cat.id 
                 })}
-                className="group relative flex items-center justify-between rounded-3xl bg-white border border-slate-200 hover:border-[#9D00FF] p-6 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden"
+                className="group relative flex items-center justify-between rounded-3xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 hover:border-[#9D00FF] dark:hover:border-[#9D00FF] p-6 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden"
               >
                 <div className="flex items-center space-x-4">
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.color} p-0.5 shadow-md group-hover:scale-110 transition-transform`}>
-                    <div className="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-                      <IconComponent className="w-7 h-7 text-[#9D00FF]" />
+                    <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[14px] flex items-center justify-center">
+                      <IconComponent className="w-7 h-7 text-[#9D00FF] dark:text-[#c06eff]" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg text-slate-900 group-hover:text-[#9D00FF] transition-colors">
+                    <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-[#9D00FF] dark:group-hover:text-[#c06eff] transition-colors">
                       {cat.title}
                     </h3>
-                    <p className="text-xs text-slate-500">{cat.subtitle}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{cat.subtitle}</p>
                   </div>
                 </div>
 

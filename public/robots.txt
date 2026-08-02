@@ -1,0 +1,6 @@
+# Robots.txt for COMSATS Study Resource Hub
+User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://comsats-resource-hub.edu.pk/sitemap.xml

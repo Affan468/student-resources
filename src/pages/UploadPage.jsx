@@ -13,8 +13,14 @@ import {
 import { uploadDocumentFile } from '../services/cloudStorage';
 import { validateFileSize, calculateFileHash } from '../services/fileCompressor';
 import SearchableSelect from '../components/common/SearchableSelect';
+import useSEO from '../hooks/useSEO';
 
 export default function UploadPage() {
+  useSEO({
+    title: 'Upload Study Resource & Past Paper',
+    description: 'Share past papers, sessional quizzes, lab manuals, and lecture notes with fellow COMSATS engineering students.'
+  });
+
   const { 
     courses, 
     instructors, 
@@ -160,17 +166,17 @@ export default function UploadPage() {
     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in pb-12">
       
       {/* Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#f0f7ff] via-[#f8efff] to-white border border-slate-200 p-8 sm:p-10 shadow-xl">
-        <div className="absolute top-0 right-0 w-72 h-72 bg-[#59a5fb]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#f0f7ff] via-[#f8efff] to-white dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800 border border-slate-200 dark:border-slate-800 p-8 sm:p-10 shadow-xl">
+        <div className="absolute top-0 right-0 w-72 h-72 bg-[#59a5fb]/10 dark:bg-[#59a5fb]/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#59a5fb]/15 border border-[#59a5fb]/30 text-[#59a5fb] text-xs font-semibold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#59a5fb]/15 dark:bg-[#59a5fb]/25 border border-[#59a5fb]/30 text-[#59a5fb] dark:text-[#7bb9fc] text-xs font-semibold">
             <Upload className="w-3.5 h-3.5" />
             <span>Open Student Document Contribution</span>
           </div>
 
-          <h1 className="text-3xl font-extrabold text-slate-900">Upload Past Papers, Quizzes, Assignments, Labs & Lectures</h1>
-          <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-2xl">
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">Upload Past Papers, Quizzes, Assignments, Labs & Lectures</h1>
+          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed max-w-2xl">
             Help your fellow COMSATS students by sharing exam past papers, sessional quizzes, assignment solutions, lab assignments, lab manuals, or lecture slides. Uploaded documents are reviewed by admins before publishing.
           </p>
         </div>
@@ -178,13 +184,13 @@ export default function UploadPage() {
 
       {/* Success Notification Banner */}
       {uploadSuccess && (
-        <div className="bg-emerald-50 border border-emerald-300 rounded-3xl p-6 flex items-center gap-4 text-emerald-800 animate-fade-in">
+        <div className="bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-700 rounded-3xl p-6 flex items-center gap-4 text-emerald-800 dark:text-emerald-300 animate-fade-in">
           <div className="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shrink-0">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
             <h3 className="font-bold text-lg">Document Submitted for Review!</h3>
-            <p className="text-xs text-emerald-700 mt-0.5">
+            <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-0.5">
               Your document has been sent to the Admin Review Queue. Redirecting to home...
             </p>
           </div>
@@ -192,7 +198,7 @@ export default function UploadPage() {
       )}
 
       {/* Form Container */}
-      <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
@@ -222,13 +228,13 @@ export default function UploadPage() {
 
           {/* Resource Category */}
           <div className="space-y-2 md:col-span-2">
-            <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-              <Tag className="w-4 h-4 text-[#59a5fb]" /> Resource Category
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Tag className="w-4 h-4 text-[#59a5fb] dark:text-[#7bb9fc]" /> Resource Category
             </label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#59a5fb]"
+              className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#59a5fb]"
             >
               <option value="past-paper">📜 Past Paper (Exam Paper)</option>
               <option value="quiz">📝 Quiz</option>
@@ -243,21 +249,21 @@ export default function UploadPage() {
 
         {/* Document Title */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-slate-700">Document Title</label>
+          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Document Title</label>
           <input
             type="text"
             placeholder="e.g. Data Structures Midterm Spring 2024 Solved Paper"
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             required
-            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#59a5fb]"
+            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#59a5fb]"
           />
         </div>
 
         {/* File Dropzone */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-slate-700">Attach Document (PDF, DOCX, ZIP)</label>
-          <div className="relative border-2 border-dashed border-slate-300 hover:border-[#9D00FF] rounded-2xl p-6 text-center bg-slate-50 transition-colors">
+          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Attach Document (PDF, DOCX, ZIP)</label>
+          <div className="relative border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-[#9D00FF] dark:hover:border-[#9D00FF] rounded-2xl p-6 text-center bg-slate-50 dark:bg-slate-800/50 transition-colors">
             <input
               type="file"
               accept=".pdf,.docx,.zip,.png,.jpg"
@@ -265,23 +271,23 @@ export default function UploadPage() {
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
             <div className="space-y-2 pointer-events-none">
-              <div className="w-12 h-12 rounded-2xl bg-[#9D00FF]/10 border border-[#9D00FF]/30 flex items-center justify-center text-[#9D00FF] mx-auto">
+              <div className="w-12 h-12 rounded-2xl bg-[#9D00FF]/10 dark:bg-[#9D00FF]/20 border border-[#9D00FF]/30 flex items-center justify-center text-[#9D00FF] dark:text-[#c06eff] mx-auto">
                 <FileText className="w-6 h-6" />
               </div>
               {fileError ? (
-                <div className="text-rose-600 font-semibold text-xs bg-rose-50 p-2 rounded-xl border border-rose-200">
+                <div className="text-rose-600 dark:text-rose-400 font-semibold text-xs bg-rose-50 dark:bg-rose-950/60 p-2 rounded-xl border border-rose-200 dark:border-rose-800">
                   ⚠️ {fileError}
                 </div>
               ) : selectedFile ? (
-                <div className="text-[#9D00FF] font-semibold text-sm">
+                <div className="text-[#9D00FF] dark:text-[#c06eff] font-semibold text-sm">
                   ✓ Selected File: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
                 </div>
               ) : (
                 <>
-                  <p className="text-xs font-semibold text-slate-700">
+                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">
                     Click to select or drag & drop document file here
                   </p>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500">
                     Supports PDF, DOCX, ZIP files up to 20 MB (Auto-compressed for fast storage)
                   </p>
                 </>

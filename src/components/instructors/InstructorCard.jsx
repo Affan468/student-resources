@@ -16,7 +16,7 @@ export default function InstructorCard({ instructor, courseId }) {
   return (
     <div 
       onClick={() => navigateTo('instructor-detail', { courseId, instructorId: instructor.id })}
-      className="group relative flex flex-col justify-between rounded-3xl bg-white border border-slate-200 hover:border-[#9D00FF] p-6 shadow-md hover:shadow-xl hover:shadow-[#9D00FF]/10 transition-all duration-300 cursor-pointer"
+      className="group relative flex flex-col justify-between rounded-3xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 hover:border-[#9D00FF] dark:hover:border-[#9D00FF] p-6 shadow-md hover:shadow-xl hover:shadow-[#9D00FF]/10 transition-all duration-300 cursor-pointer"
     >
       <div>
         {/* Top Header: Avatar & Info */}
@@ -24,60 +24,62 @@ export default function InstructorCard({ instructor, courseId }) {
           <img
             src={instructor.avatar}
             alt={instructor.name}
+            loading="lazy"
+            decoding="async"
             className="w-14 h-14 rounded-2xl object-cover border-2 border-[#59a5fb]/40 group-hover:border-[#9D00FF] shadow-md group-hover:scale-105 transition-all"
           />
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-lg text-slate-900 group-hover:text-[#9D00FF] transition-colors">
+              <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-[#9D00FF] dark:group-hover:text-[#c06eff] transition-colors">
                 {instructor.name}
               </h3>
-              <UserCheck className="w-4 h-4 text-[#9D00FF]" />
+              <UserCheck className="w-4 h-4 text-[#9D00FF] dark:text-[#c06eff]" />
             </div>
-            <p className="text-xs text-slate-500 font-medium">{instructor.title}</p>
-            <p className="text-[11px] text-slate-400">{instructor.department}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{instructor.title}</p>
+            <p className="text-[11px] text-slate-400 dark:text-slate-500">{instructor.department}</p>
           </div>
         </div>
 
         {/* Bio */}
-        <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-6">
+        <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed mb-6">
           {instructor.bio}
         </p>
 
         {/* Categories breakdown pills */}
         <div className="grid grid-cols-5 gap-1.5 mb-6 text-center">
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-1.5">
-            <span className="block text-[9px] text-slate-500 font-medium uppercase tracking-tighter">Papers</span>
-            <span className="font-extrabold text-xs text-[#59a5fb]">{pastPapersCount}</span>
+          <div className="bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 rounded-xl p-1.5">
+            <span className="block text-[9px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-tighter">Papers</span>
+            <span className="font-extrabold text-xs text-[#59a5fb] dark:text-[#7bb9fc]">{pastPapersCount}</span>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-1.5">
-            <span className="block text-[9px] text-slate-500 font-medium uppercase tracking-tighter">Quizzes</span>
-            <span className="font-extrabold text-xs text-[#9D00FF]">{quizzesCount}</span>
+          <div className="bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 rounded-xl p-1.5">
+            <span className="block text-[9px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-tighter">Quizzes</span>
+            <span className="font-extrabold text-xs text-[#9D00FF] dark:text-[#c06eff]">{quizzesCount}</span>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-1.5">
-            <span className="block text-[9px] text-slate-500 font-medium uppercase tracking-tighter">Assign</span>
-            <span className="font-extrabold text-xs text-[#59a5fb]">{assignmentsCount}</span>
+          <div className="bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 rounded-xl p-1.5">
+            <span className="block text-[9px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-tighter">Assign</span>
+            <span className="font-extrabold text-xs text-[#59a5fb] dark:text-[#7bb9fc]">{assignmentsCount}</span>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-1.5">
-            <span className="block text-[9px] text-slate-500 font-medium uppercase tracking-tighter">Labs</span>
-            <span className="font-extrabold text-xs text-emerald-600">{labsCount}</span>
+          <div className="bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 rounded-xl p-1.5">
+            <span className="block text-[9px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-tighter">Labs</span>
+            <span className="font-extrabold text-xs text-emerald-600 dark:text-emerald-400">{labsCount}</span>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-1.5">
-            <span className="block text-[9px] text-slate-500 font-medium uppercase tracking-tighter">Lectures</span>
-            <span className="font-extrabold text-xs text-amber-600">{lecturesCount}</span>
+          <div className="bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 rounded-xl p-1.5">
+            <span className="block text-[9px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-tighter">Lectures</span>
+            <span className="font-extrabold text-xs text-amber-600 dark:text-amber-400">{lecturesCount}</span>
           </div>
         </div>
       </div>
 
       {/* Action Footer */}
-      <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-        <span className="text-xs font-semibold text-[#9D00FF] group-hover:text-[#9D00FF] flex items-center gap-1.5">
+      <div className="pt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between">
+        <span className="text-xs font-semibold text-[#9D00FF] dark:text-[#c06eff] group-hover:text-[#9D00FF] dark:group-hover:text-[#c06eff] flex items-center gap-1.5">
           View Resources & Bulk ZIP
         </span>
-        <div className="w-8 h-8 rounded-full bg-slate-100 group-hover:bg-[#9D00FF] group-hover:text-white flex items-center justify-center text-[#9D00FF] transition-all duration-300">
+        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 group-hover:bg-[#9D00FF] dark:group-hover:bg-[#9D00FF] group-hover:text-white flex items-center justify-center text-[#9D00FF] dark:text-[#c06eff] transition-all duration-300">
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </div>
       </div>

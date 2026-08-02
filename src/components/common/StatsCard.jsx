@@ -20,18 +20,18 @@ export default function StatsCard() {
         return (
           <div 
             key={idx} 
-            className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 p-5 backdrop-blur-sm shadow-md hover:shadow-lg hover:border-[#9D00FF]/50 transition-all group"
+            className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 p-5 backdrop-blur-sm shadow-md hover:shadow-lg hover:border-[#9D00FF]/50 dark:hover:border-[#9D00FF]/50 transition-all group"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm font-semibold text-slate-500">{stat.label}</p>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1 tracking-tight">
+                <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">{stat.label}</p>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 tracking-tight">
                   {stat.value.toLocaleString()}
                 </h3>
               </div>
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} p-0.5 shadow-md group-hover:scale-105 transition-transform`}>
-                <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
-                  <IconComponent className="w-6 h-6 text-[#9D00FF]" />
+                <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[10px] flex items-center justify-center">
+                  <IconComponent className="w-6 h-6 text-[#9D00FF] dark:text-[#c06eff]" />
                 </div>
               </div>
             </div>

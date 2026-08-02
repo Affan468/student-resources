@@ -8,5 +8,26 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('pdf-lib') || id.includes('jszip') || id.includes('file-saver')) {
+              return 'vendor-pdf-zip';
+            }
+            if (id.includes('@aws-sdk') || id.includes('@supabase')) {
+              return 'vendor-cloud-storage';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'vendor-react';
+            }
+          }
+        }
+      }
+    }
+  }
 })
-

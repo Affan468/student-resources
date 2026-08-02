@@ -3,6 +3,7 @@ import { useResource } from '../context/ResourceContext';
 import ResourceCard from '../components/resources/ResourceCard';
 import { ArrowLeft, FileText, FolderArchive } from 'lucide-react';
 import { downloadCategoryZip } from '../services/zipGenerator';
+import useSEO from '../hooks/useSEO';
 
 export default function CategoryFilesPage() {
   const { 
@@ -23,6 +24,11 @@ export default function CategoryFilesPage() {
     selectedCategory === 'lab-assignment' ? 'Lab Assignments' :
     selectedCategory === 'lab-manual' ? 'Lab Manuals' :
     selectedCategory === 'lecture' ? 'Lectures' : 'Other Notes & Materials';
+
+  useSEO({
+    title: `${categoryTitle} - ${activeInstructor?.name || 'COMSATS Resource'}`,
+    description: `Download ${categoryTitle} for ${activeCourse?.title || 'Engineering Course'} taught by ${activeInstructor?.name || 'Faculty Instructor'} at COMSATS University.`
+  });
 
   const categoryFiles = getCategoryResources(
     activeInstructor?.id,
@@ -58,29 +64,29 @@ export default function CategoryFilesPage() {
             courseId: activeCourse?.id, 
             instructorId: activeInstructor?.id 
           })}
-          className="flex items-center space-x-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm"
+          className="flex items-center space-x-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-xl shadow-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Categories</span>
         </button>
 
-        <div className="text-xs text-slate-500 font-mono">
-          {activeCourse?.code} / {activeInstructor?.name} / <span className="text-[#9D00FF] font-semibold capitalize">{categoryTitle}</span>
+        <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+          {activeCourse?.code} / {activeInstructor?.name} / <span className="text-[#9D00FF] dark:text-[#c06eff] font-semibold capitalize">{categoryTitle}</span>
         </div>
       </div>
 
       {/* Category Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#f0f7ff] via-[#f8efff] to-white border border-slate-200 p-8 sm:p-10 shadow-xl">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#f0f7ff] via-[#f8efff] to-white dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-800 border border-slate-200 dark:border-slate-800 p-8 sm:p-10 shadow-xl">
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#59a5fb]/15 border border-[#59a5fb]/30 text-[#59a5fb] text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#59a5fb]/15 dark:bg-[#59a5fb]/25 border border-[#59a5fb]/30 text-[#59a5fb] dark:text-[#7bb9fc] text-xs font-semibold">
               <FileText className="w-3.5 h-3.5" />
               <span>{activeCourse?.title} ({activeCourse?.code})</span>
             </div>
-            <h1 className="text-3xl font-extrabold text-slate-900">
+            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">
               {categoryTitle} by {activeInstructor?.name}
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Showing {categoryFiles.length} verified file{categoryFiles.length !== 1 ? 's' : ''} for download.
             </p>
           </div>
@@ -107,12 +113,12 @@ export default function CategoryFilesPage() {
           ))}
         </div>
       ) : (
-        <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center shadow-md">
-          <div className="w-16 h-16 rounded-2xl bg-[#59a5fb]/10 border border-[#59a5fb]/30 flex items-center justify-center text-[#59a5fb] mx-auto mb-4">
+        <div className="bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 rounded-3xl p-12 text-center shadow-md">
+          <div className="w-16 h-16 rounded-2xl bg-[#59a5fb]/10 dark:bg-[#59a5fb]/20 border border-[#59a5fb]/30 flex items-center justify-center text-[#59a5fb] dark:text-[#7bb9fc] mx-auto mb-4">
             <FileText className="w-8 h-8" />
           </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-2">No Files Available Yet</h3>
-          <p className="text-slate-500 text-xs max-w-md mx-auto mb-6">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">No Files Available Yet</h3>
+          <p className="text-slate-500 dark:text-slate-400 text-xs max-w-md mx-auto mb-6">
             There are currently no uploaded {categoryTitle.toLowerCase()} for {activeInstructor?.name} in this course. Be the first student to upload!
           </p>
           <button
