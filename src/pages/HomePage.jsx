@@ -170,35 +170,57 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Engineering Department Filter Tabs */}
-          <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 lg:pb-0 no-scrollbar">
-            {DEPARTMENTS.map((deptObj) => {
-              const count = directoryMode === 'courses' ? getCourseCountForDept(deptObj) : getInstructorCountForDept(deptObj);
-              const isSelected = selectedDept === deptObj.label;
-              return (
+          {/* Search Input & Engineering Department Filter Tabs */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="relative min-w-[220px] sm:w-64">
+              <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder={directoryMode === 'courses' ? "Search course title, code..." : "Search instructor by name..."}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-7 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#9D00FF] transition-all"
+              />
+              {searchQuery && (
                 <button
-                  key={deptObj.label}
-                  onClick={() => setSelectedDept(deptObj.label)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-                    isSelected
-                      ? directoryMode === 'courses'
-                        ? 'bg-gradient-to-r from-[#59a5fb] to-[#3b82f6] text-white font-extrabold shadow-md shadow-[#59a5fb]/20'
-                        : 'bg-gradient-to-r from-[#9D00FF] to-[#7c00cc] text-white font-extrabold shadow-md shadow-[#9D00FF]/20'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                  }`}
-                  title={deptObj.full}
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600"
                 >
-                  <span>{deptObj.label}</span>
-                  <span className={`px-1.5 py-0.2 text-[10px] font-bold rounded-full ${
-                    isSelected
-                      ? 'bg-white/20 text-white'
-                      : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-                  }`}>
-                    {count}
-                  </span>
+                  ✕
                 </button>
-              );
-            })}
+              )}
+            </div>
+
+            {/* Engineering Department Filter Tabs */}
+            <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
+              {DEPARTMENTS.map((deptObj) => {
+                const count = directoryMode === 'courses' ? getCourseCountForDept(deptObj) : getInstructorCountForDept(deptObj);
+                const isSelected = selectedDept === deptObj.label;
+                return (
+                  <button
+                    key={deptObj.label}
+                    onClick={() => setSelectedDept(deptObj.label)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                      isSelected
+                        ? directoryMode === 'courses'
+                          ? 'bg-gradient-to-r from-[#59a5fb] to-[#3b82f6] text-white font-extrabold shadow-md shadow-[#59a5fb]/20'
+                          : 'bg-gradient-to-r from-[#9D00FF] to-[#7c00cc] text-white font-extrabold shadow-md shadow-[#9D00FF]/20'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                    }`}
+                    title={deptObj.full}
+                  >
+                    <span>{deptObj.label}</span>
+                    <span className={`px-1.5 py-0.2 text-[10px] font-bold rounded-full ${
+                      isSelected
+                        ? 'bg-white/20 text-white'
+                        : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                    }`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
