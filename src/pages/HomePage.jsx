@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useResource } from '../context/ResourceContext';
 import CourseCard from '../components/courses/CourseCard';
+import InstructorCard from '../components/instructors/InstructorCard';
 import StatsCard from '../components/common/StatsCard';
 import useSEO from '../hooks/useSEO';
 import { 
@@ -8,7 +9,8 @@ import {
   BookOpen, 
   Upload, 
   ShieldCheck, 
-  Globe 
+  Globe,
+  Users
 } from 'lucide-react';
 
 const DEPARTMENTS = [
@@ -26,13 +28,16 @@ export default function HomePage() {
 
   const { 
     filteredCourses, 
+    instructors,
     searchQuery, 
     setSearchQuery, 
     navigateTo 
   } = useResource();
 
+  const [directoryMode, setDirectoryMode] = useState('courses'); // 'courses' | 'instructors'
   const [selectedDept, setSelectedDept] = useState('All');
 
+  // Filter courses by selected department
   const displayedCourses = filteredCourses.filter(course => {
     if (selectedDept === 'All') return true;
     if (course.department === 'All Majors (CE, EE & EEE)' || course.department === 'All') return true;
@@ -40,11 +45,34 @@ export default function HomePage() {
     return course.department === target?.full || course.department === selectedDept;
   });
 
+  // Filter instructors by search query & department
+  const displayedInstructors = instructors.filter(inst => {
+    const q = searchQuery.toLowerCase().trim();
+    const matchSearch = !q || (
+      (inst.name && inst.name.toLowerCase().includes(q)) ||
+      (inst.title && inst.title.toLowerCase().includes(q)) ||
+      (inst.department && inst.department.toLowerCase().includes(q)) ||
+      (inst.specialization && inst.specialization.toLowerCase().includes(q))
+    );
+
+    if (!matchSearch) return false;
+    if (selectedDept === 'All') return true;
+    const target = DEPARTMENTS.find(d => d.label === selectedDept);
+    return (inst.department && (inst.department.includes(selectedDept) || inst.department === target?.full));
+  });
+
   const getCourseCountForDept = (deptObj) => {
     return filteredCourses.filter(course => {
       if (deptObj.label === 'All') return true;
       if (course.department === 'All Majors (CE, EE & EEE)' || course.department === 'All') return true;
       return course.department === deptObj.full || course.department === deptObj.label;
+    }).length;
+  };
+
+  const getInstructorCountForDept = (deptObj) => {
+    return instructors.filter(inst => {
+      if (deptObj.label === 'All') return true;
+      return (inst.department && (inst.department.includes(deptObj.label) || inst.department === deptObj.full));
     }).length;
   };
 
@@ -86,23 +114,66 @@ export default function HomePage() {
       {/* Platform Statistics Overview */}
       <StatsCard />
 
-      {/* Course Directory Section */}
-      <section className="space-y-5">
+      {/* Main Directory Section */}
+      <section className="space-y-6">
+        
+        {/* Main View Mode Selector (Courses vs All Instructors) */}
+        <div className="flex items-center justify-center">
+          <div className="inline-flex p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-inner">
+            <button
+              onClick={() => setDirectoryMode('courses')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all ${
+                directoryMode === 'courses'
+                  ? 'bg-gradient-to-r from-[#59a5fb] to-[#3b82f6] text-white shadow-md shadow-[#59a5fb]/25'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Courses Directory ({filteredCourses.length})</span>
+            </button>
+
+            <button
+              onClick={() => setDirectoryMode('instructors')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all ${
+                directoryMode === 'instructors'
+                  ? 'bg-gradient-to-r from-[#9D00FF] to-[#7c00cc] text-white shadow-md shadow-[#9D00FF]/25'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Users className="w-4 h-4" />
+              <span>All Faculty Instructors ({instructors.length})</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Directory Header Bar with Department Filter Tabs */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
           <div>
             <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-              <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-[#9D00FF] dark:text-[#c06eff]" />
-              <span>Explore Engineering Course Directory</span>
+              {directoryMode === 'courses' ? (
+                <>
+                  <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-[#59a5fb] dark:text-[#7bb9fc]" />
+                  <span>Explore Engineering Courses Directory</span>
+                </>
+              ) : (
+                <>
+                  <Users className="w-5 h-5 sm:w-6 sm:h-6 text-[#9D00FF] dark:text-[#c06eff]" />
+                  <span>Faculty Instructors Directory</span>
+                </>
+              )}
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Select an engineering department or course to view instructors, past papers, quizzes, and solutions.
+              {directoryMode === 'courses'
+                ? 'Select an engineering department or course to view instructors, past papers, quizzes, and solutions.'
+                : 'Select an instructor to view all past papers, quizzes, lab manuals, and lecture notes provided by that teacher.'
+              }
             </p>
           </div>
 
-          {/* Engineering Department Filter Tabs with Course Counts */}
+          {/* Engineering Department Filter Tabs */}
           <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 lg:pb-0 no-scrollbar">
             {DEPARTMENTS.map((deptObj) => {
-              const count = getCourseCountForDept(deptObj);
+              const count = directoryMode === 'courses' ? getCourseCountForDept(deptObj) : getInstructorCountForDept(deptObj);
               const isSelected = selectedDept === deptObj.label;
               return (
                 <button
@@ -110,7 +181,9 @@ export default function HomePage() {
                   onClick={() => setSelectedDept(deptObj.label)}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
                     isSelected
-                      ? 'bg-gradient-to-r from-[#59a5fb] to-[#9D00FF] text-white font-extrabold shadow-md shadow-[#9D00FF]/20'
+                      ? directoryMode === 'courses'
+                        ? 'bg-gradient-to-r from-[#59a5fb] to-[#3b82f6] text-white font-extrabold shadow-md shadow-[#59a5fb]/20'
+                        : 'bg-gradient-to-r from-[#9D00FF] to-[#7c00cc] text-white font-extrabold shadow-md shadow-[#9D00FF]/20'
                       : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                   }`}
                   title={deptObj.full}
@@ -129,32 +202,61 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Responsive Courses Cards Grid */}
-        {displayedCourses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            {displayedCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
-        ) : (
-          <div className="bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 rounded-3xl p-8 text-center shadow-md">
-            <div className="w-14 h-14 rounded-2xl bg-[#59a5fb]/10 dark:bg-[#59a5fb]/20 border border-[#59a5fb]/30 flex items-center justify-center text-[#59a5fb] dark:text-[#7bb9fc] mx-auto mb-3">
-              <Search className="w-7 h-7" />
+        {/* Directory Content Display (Courses Grid vs Instructors Grid) */}
+        {directoryMode === 'courses' ? (
+          displayedCourses.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              {displayedCourses.map((course) => (
+                <CourseCard key={course.id} course={course} />
+              ))}
             </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">No Courses Found</h3>
-            <p className="text-slate-500 dark:text-slate-400 text-xs">
-              No course matched "{searchQuery}". Try searching in the top navbar by course abbreviation like "OOP", "DSA", "DBS", "OS" or select "All".
-            </p>
-            <button
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedDept('All');
-              }}
-              className="mt-3 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
-            >
-              Clear Filters
-            </button>
-          </div>
+          ) : (
+            <div className="bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 rounded-3xl p-8 text-center shadow-md">
+              <div className="w-14 h-14 rounded-2xl bg-[#59a5fb]/10 dark:bg-[#59a5fb]/20 border border-[#59a5fb]/30 flex items-center justify-center text-[#59a5fb] dark:text-[#7bb9fc] mx-auto mb-3">
+                <Search className="w-7 h-7" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">No Courses Found</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-xs">
+                No course matched "{searchQuery}". Try searching in the top navbar by course abbreviation like "OOP", "DSA", "DBS", "OS" or select "All".
+              </p>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedDept('All');
+                }}
+                className="mt-3 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
+              >
+                Clear Filters
+              </button>
+            </div>
+          )
+        ) : (
+          displayedInstructors.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {displayedInstructors.map((inst) => (
+                <InstructorCard key={inst.id} instructor={inst} courseId={null} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 rounded-3xl p-8 text-center shadow-md">
+              <div className="w-14 h-14 rounded-2xl bg-[#9D00FF]/10 dark:bg-[#9D00FF]/20 border border-[#9D00FF]/30 flex items-center justify-center text-[#9D00FF] dark:text-[#c06eff] mx-auto mb-3">
+                <Users className="w-7 h-7" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">No Instructors Found</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-xs">
+                No instructor matched "{searchQuery}". Try searching for faculty teacher names or select "All".
+              </p>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedDept('All');
+                }}
+                className="mt-3 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
+              >
+                Clear Filters
+              </button>
+            </div>
+          )
         )}
       </section>
     </div>

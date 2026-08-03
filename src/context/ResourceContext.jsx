@@ -519,6 +519,31 @@ export function ResourceProvider({ children }) {
     showToast(`Deleted instructor "${inst.name}"`, 'info');
   };
 
+  // Update assigned courses for an instructor by admin
+  const updateInstructorCourses = async (instructorId, newCourseIds) => {
+    const inst = instructors.find(i => i.id === instructorId);
+    if (!inst) return;
+
+    setCourses(prevCourses => prevCourses.map(c => {
+      const shouldHave = newCourseIds.includes(c.id);
+      const currentIds = c.instructorIds || [];
+      const hasInst = currentIds.includes(instructorId);
+
+      if (shouldHave && !hasInst) {
+        const updatedCourse = { ...c, instructorIds: [...currentIds, instructorId] };
+        saveCourseToSupabase(updatedCourse);
+        return updatedCourse;
+      } else if (!shouldHave && hasInst) {
+        const updatedCourse = { ...c, instructorIds: currentIds.filter(id => id !== instructorId) };
+        saveCourseToSupabase(updatedCourse);
+        return updatedCourse;
+      }
+      return c;
+    }));
+
+    showToast(`Updated assigned courses for instructor "${inst.name}"`, 'success');
+  };
+
   // Delete individual resource/document permanently (from Cloudflare R2 + Supabase DB)
   const deleteResource = async (resourceId) => {
     const res = resources.find(r => r.id === resourceId) || pendingUploads.find(r => r.id === resourceId);
@@ -566,6 +591,7 @@ export function ResourceProvider({ children }) {
       deleteCourse,
       deleteInstructor,
       updateCourseDepartment,
+      updateInstructorCourses,
       deleteResource,
       incrementDownloads,
       toast,

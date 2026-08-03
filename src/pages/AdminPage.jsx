@@ -5,6 +5,7 @@ import AdminQueueTable from '../components/admin/AdminQueueTable';
 import AddCourseModal from '../components/admin/AddCourseModal';
 import AddInstructorModal from '../components/admin/AddInstructorModal';
 import CourseContentModal from '../components/admin/CourseContentModal';
+import ManageInstructorCoursesModal from '../components/admin/ManageInstructorCoursesModal';
 import {
   ShieldCheck,
   Lock,
@@ -56,6 +57,7 @@ export default function AdminPage() {
   // Custom Delete Confirmation Modal State
   const [deleteTarget, setDeleteTarget] = useState(null); // { type: 'course' | 'instructor', item: object }
   const [selectedCourseForContent, setSelectedCourseForContent] = useState(null);
+  const [selectedInstructorForCourses, setSelectedInstructorForCourses] = useState(null);
 
   const totalApproved = resources.length;
   const totalPending = pendingUploads.length;
@@ -432,33 +434,47 @@ export default function AdminPage() {
                 );
               }
 
-              return filteredInstructors.map(inst => (
-                <div
-                  key={inst.id}
-                  className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all"
-                >
-                  <div className="flex items-center space-x-3">
-                    <img
-                      src={inst.avatar}
-                      alt={inst.name}
-                      className="w-11 h-11 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shrink-0"
-                    />
-                    <div>
-                      <h4 className="font-bold text-sm text-slate-900 dark:text-white">{inst.name}</h4>
-                      <p className="text-xs text-[#9D00FF] dark:text-[#c06eff] font-medium">{inst.title}</p>
-                      <span className="text-[11px] text-slate-400 dark:text-slate-500 block">{inst.department}</span>
+              return filteredInstructors.map(inst => {
+                const assignedCount = courses.filter(c => (c.instructorIds || []).includes(inst.id)).length;
+                return (
+                  <div
+                    key={inst.id}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all gap-3"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={inst.avatar || inst.avatarUrl}
+                        alt={inst.name}
+                        className="w-11 h-11 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shrink-0"
+                      />
+                      <div>
+                        <h4 className="font-bold text-sm text-slate-900 dark:text-white">{inst.name}</h4>
+                        <p className="text-xs text-[#9D00FF] dark:text-[#c06eff] font-medium">{inst.title}</p>
+                        <span className="text-[11px] text-slate-400 dark:text-slate-500 block">{inst.department}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                      <button
+                        onClick={() => setSelectedInstructorForCourses(inst)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#9D00FF]/10 dark:bg-[#9D00FF]/20 text-[#9D00FF] dark:text-[#c06eff] hover:bg-[#9D00FF] hover:text-white font-bold text-xs transition-all shadow-sm"
+                        title="Assign or unassign multiple engineering courses"
+                      >
+                        <BookOpen className="w-3.5 h-3.5" />
+                        <span>Manage Courses ({assignedCount})</span>
+                      </button>
+
+                      <button
+                        onClick={() => setDeleteTarget({ type: 'instructor', item: inst })}
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-xs transition-all shadow-sm"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Delete</span>
+                      </button>
                     </div>
                   </div>
-
-                  <button
-                    onClick={() => setDeleteTarget({ type: 'instructor', item: inst })}
-                    className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white font-bold text-xs transition-all shadow-sm shrink-0"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Delete</span>
-                  </button>
-                </div>
-              ));
+                );
+              });
             })()}
           </div>
         </section>
@@ -477,6 +493,13 @@ export default function AdminPage() {
         <CourseContentModal
           course={selectedCourseForContent}
           onClose={() => setSelectedCourseForContent(null)}
+        />
+      )}
+
+      {selectedInstructorForCourses && (
+        <ManageInstructorCoursesModal
+          instructor={selectedInstructorForCourses}
+          onClose={() => setSelectedInstructorForCourses(null)}
         />
       )}
 
