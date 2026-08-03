@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useResource } from '../../context/ResourceContext';
-import { X, UserPlus, Plus, BookOpen } from 'lucide-react';
+import { X, UserPlus, Plus, BookOpen, AlertTriangle } from 'lucide-react';
 
 export default function AddInstructorModal({ onClose }) {
-  const { courses, addInstructor } = useResource();
+  const { courses, addInstructor, checkDuplicateInstructorName } = useResource();
 
   const [formData, setFormData] = useState({
     name: '',
     courseIds: []
   });
+
+  const dupCheck = checkDuplicateInstructorName(formData.name);
 
   const handleCourseToggle = (courseId) => {
     setFormData(prev => {
@@ -29,8 +31,15 @@ export default function AddInstructorModal({ onClose }) {
       return;
     }
 
-    addInstructor(formData);
-    onClose();
+    if (dupCheck.isDuplicate) {
+      alert(`Cannot add instructor: ${dupCheck.reason}`);
+      return;
+    }
+
+    const res = addInstructor(formData);
+    if (res && res.success) {
+      onClose();
+    }
   };
 
   return createPortal(
@@ -69,8 +78,18 @@ export default function AddInstructorModal({ onClose }) {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
-              className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9D00FF]"
+              className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 transition-all ${
+                dupCheck.isDuplicate
+                  ? 'border-rose-500 ring-rose-500/20 dark:border-rose-500'
+                  : 'border-slate-200 dark:border-slate-700 focus:ring-[#9D00FF]'
+              }`}
             />
+            {dupCheck.isDuplicate && (
+              <div className="flex items-start gap-2 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/80 text-rose-600 dark:text-rose-400 text-xs font-semibold animate-shake">
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{dupCheck.reason}</span>
+              </div>
+            )}
           </div>
 
           {/* Assign Courses Multi-select */}
@@ -114,7 +133,8 @@ export default function AddInstructorModal({ onClose }) {
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#59a5fb] to-[#9D00FF] text-white font-extrabold text-sm shadow-md shadow-[#9D00FF]/25 hover:opacity-95"
+              disabled={dupCheck.isDuplicate}
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#59a5fb] to-[#9D00FF] text-white font-extrabold text-sm shadow-md shadow-[#9D00FF]/25 hover:opacity-95 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Plus className="w-4 h-4" />
               <span>Create Instructor</span>

@@ -452,8 +452,63 @@ export function ResourceProvider({ children }) {
     showToast(`Updated "${target.code}" department to "${newDepartment}"`, 'success');
   };
 
+  // Check for duplicate instructor name by lowercasing, stripping spaces, and checking 9+ letter substring matches
+  const checkDuplicateInstructorName = (newName) => {
+    if (!newName || !newName.trim()) return { isDuplicate: false };
+
+    // Convert whole input name to lower case and remove spaces/special chars
+    const normNew = newName.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (normNew.length < 3) return { isDuplicate: false };
+
+    for (const inst of instructors) {
+      if (!inst.name) continue;
+      // Convert available instructor name to lower case without spaces
+      const normExisting = inst.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+      // 1. Exact match without spaces/case
+      if (normNew === normExisting) {
+        return {
+          isDuplicate: true,
+          reason: `An instructor named "${inst.name}" is already registered.`,
+          matchedInstructor: inst
+        };
+      }
+
+      // 2. Check if 9 or more letters match (sliding 9-character window)
+      if (normNew.length >= 9 && normExisting.length >= 9) {
+        for (let i = 0; i <= normNew.length - 9; i++) {
+          const subStr = normNew.substring(i, i + 9);
+          if (normExisting.includes(subStr)) {
+            return {
+              isDuplicate: true,
+              reason: `Name "${newName.trim()}" has 9 or more matching letters with existing instructor "${inst.name}".`,
+              matchedInstructor: inst
+            };
+          }
+        }
+      } else {
+        // Containment check for names shorter than 9 letters
+        if (normNew.length >= 4 && (normExisting.includes(normNew) || normNew.includes(normExisting))) {
+          return {
+            isDuplicate: true,
+            reason: `Name "${newName.trim()}" is too similar to existing instructor "${inst.name}".`,
+            matchedInstructor: inst
+          };
+        }
+      }
+    }
+
+    return { isDuplicate: false };
+  };
+
   // Add new instructor by admin
   const addInstructor = (instData) => {
+    const dupCheck = checkDuplicateInstructorName(instData.name);
+    if (dupCheck.isDuplicate) {
+      showToast(dupCheck.reason, 'error');
+      return { success: false, reason: dupCheck.reason };
+    }
+
     const instId = `inst-${Date.now()}`;
     const newInstructor = {
       id: instId,
@@ -484,7 +539,7 @@ export function ResourceProvider({ children }) {
     }
 
     showToast(`Added new instructor "${newInstructor.name}"!`, 'success');
-    return newInstructor;
+    return { success: true, instructor: newInstructor };
   };
 
   // Delete course by admin
@@ -588,6 +643,7 @@ export function ResourceProvider({ children }) {
       rejectUpload,
       addCourse,
       addInstructor,
+      checkDuplicateInstructorName,
       deleteCourse,
       deleteInstructor,
       updateCourseDepartment,

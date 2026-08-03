@@ -215,8 +215,8 @@ export default function AdminPage() {
         <button
           onClick={() => setActiveTab('queue')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${activeTab === 'queue'
-              ? 'bg-slate-900 dark:bg-slate-700 text-white shadow-md'
-              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+            ? 'bg-slate-900 dark:bg-slate-700 text-white shadow-md'
+            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
         >
           <Clock className="w-4 h-4 text-amber-400" />
@@ -226,8 +226,8 @@ export default function AdminPage() {
         <button
           onClick={() => setActiveTab('courses')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${activeTab === 'courses'
-              ? 'bg-[#59a5fb] text-white shadow-md shadow-[#59a5fb]/20'
-              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+            ? 'bg-[#59a5fb] text-white shadow-md shadow-[#59a5fb]/20'
+            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
         >
           <BookOpen className="w-4 h-4" />
@@ -237,8 +237,8 @@ export default function AdminPage() {
         <button
           onClick={() => setActiveTab('instructors')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${activeTab === 'instructors'
-              ? 'bg-[#9D00FF] text-white shadow-md shadow-[#9D00FF]/20'
-              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+            ? 'bg-[#9D00FF] text-white shadow-md shadow-[#9D00FF]/20'
+            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
         >
           <Users className="w-4 h-4" />
