@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useResource } from '../context/ResourceContext';
+import ResourceCard from '../components/resources/ResourceCard';
 import { 
   ArrowLeft, 
   Download, 
@@ -10,7 +11,9 @@ import {
   BookOpenCheck, 
   FileCheck2,
   FlaskConical,
-  Presentation
+  Presentation,
+  Layers,
+  Search
 } from 'lucide-react';
 import { downloadInstructorResourcesZip } from '../services/zipGenerator';
 import useSEO from '../hooks/useSEO';
@@ -26,6 +29,7 @@ export default function InstructorDetailPage() {
 
   const [isZipping, setIsZipping] = useState(false);
   const [zipProgress, setZipProgress] = useState(0);
+  const [selectedCategoryTab, setSelectedCategoryTab] = useState('all'); // Default selected: 'all'
 
   useSEO({
     title: activeInstructor ? `${activeInstructor.name} (${activeInstructor.title || 'Faculty'})` : 'Instructor Profile',
@@ -56,6 +60,11 @@ export default function InstructorDetailPage() {
   const lectures = allInstructorResources.filter(r => r.category === 'lecture');
   const otherNotes = allInstructorResources.filter(r => r.category === 'other');
 
+  // Filter resources based on active tab
+  const displayedResources = selectedCategoryTab === 'all'
+    ? allInstructorResources
+    : allInstructorResources.filter(r => r.category === selectedCategoryTab);
+
   // Bulk ZIP Download Handler
   const handleBulkZipDownload = async () => {
     if (allInstructorResources.length === 0) {
@@ -85,67 +94,52 @@ export default function InstructorDetailPage() {
 
   const categories = [
     {
+      id: 'all',
+      title: 'All Resources',
+      count: allInstructorResources.length,
+      icon: Layers
+    },
+    {
       id: 'past-paper',
       title: 'Past Papers',
-      subtitle: 'Midterm & Final Examination Question Papers',
       count: pastPapers.length,
-      icon: FolderArchive,
-      color: 'from-[#59a5fb] to-[#3b82f6]',
-      badgeColor: 'bg-[#59a5fb]/15 border-[#59a5fb]/30 text-[#59a5fb]'
+      icon: FolderArchive
     },
     {
       id: 'quiz',
       title: 'Quizzes',
-      subtitle: 'Sessional Quizzes & Solved Questions',
       count: quizzes.length,
-      icon: HelpCircle,
-      color: 'from-[#9D00FF] to-[#7c00cc]',
-      badgeColor: 'bg-[#9D00FF]/15 border-[#9D00FF]/30 text-[#9D00FF]'
+      icon: HelpCircle
     },
     {
       id: 'assignment',
       title: 'Assignments',
-      subtitle: 'Assignment Tasks & Detailed Solutions',
       count: assignments.length,
-      icon: FileCheck2,
-      color: 'from-[#59a5fb] to-[#9D00FF]',
-      badgeColor: 'bg-[#59a5fb]/15 border-[#59a5fb]/30 text-[#59a5fb]'
+      icon: FileCheck2
     },
     {
       id: 'lab-assignment',
       title: 'Lab Assignments',
-      subtitle: 'Practical Lab Tasks & Solution Submissions',
       count: labAssignments.length,
-      icon: FlaskConical,
-      color: 'from-emerald-500 to-teal-600',
-      badgeColor: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-600'
+      icon: FlaskConical
     },
     {
       id: 'lab-manual',
       title: 'Lab Manuals',
-      subtitle: 'Official Lab Guides & Manual Documents',
       count: labManuals.length,
-      icon: BookOpenCheck,
-      color: 'from-[#9D00FF] to-[#59a5fb]',
-      badgeColor: 'bg-[#9D00FF]/15 border-[#9D00FF]/30 text-[#9D00FF]'
+      icon: BookOpenCheck
     },
     {
       id: 'lecture',
       title: 'Lectures',
-      subtitle: 'Lecture Slides & Classroom Presentations',
       count: lectures.length,
-      icon: Presentation,
-      color: 'from-amber-500 to-orange-600',
-      badgeColor: 'bg-amber-500/15 border-amber-500/30 text-amber-600'
+      icon: Presentation
     },
     {
       id: 'other',
-      title: 'Other Notes & Materials',
-      subtitle: 'Handwritten Notes & Supplementary Guides',
+      title: 'Other Notes',
       count: otherNotes.length,
-      icon: FileText,
-      color: 'from-slate-500 to-slate-700',
-      badgeColor: 'bg-slate-500/15 border-slate-500/30 text-slate-600'
+      icon: FileText
     }
   ];
 
@@ -175,7 +169,7 @@ export default function InstructorDetailPage() {
           
           <div className="flex items-center space-x-5">
             <img
-              src={activeInstructor.avatar}
+              src={activeInstructor.avatar || activeInstructor.avatarUrl}
               alt={activeInstructor.name}
               className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl object-cover border-2 border-[#59a5fb] shadow-lg"
             />
@@ -211,54 +205,82 @@ export default function InstructorDetailPage() {
         </div>
       </div>
 
-      {/* Category Selection Cards Section */}
+      {/* Category Tabs & All Resources Display Section */}
       <section className="space-y-6">
-        <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <FileText className="w-5 h-5 text-[#59a5fb] dark:text-[#7bb9fc]" />
-            <span>Select Resource Category</span>
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Click on a category below to browse and download specific past papers, quizzes, or assignments.
-          </p>
-        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <FileText className="w-5 h-5 text-[#59a5fb] dark:text-[#7bb9fc]" />
+              <span>Study Resources Repository</span>
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Browse all study materials or select a specific category tab.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {categories.map((cat) => {
-            const IconComponent = cat.icon;
-            return (
-              <div
-                key={cat.id}
-                onClick={() => navigateTo('category-files', { 
-                  courseId: activeCourse?.id, 
-                  instructorId: activeInstructor.id, 
-                  category: cat.id 
-                })}
-                className="group relative flex items-center justify-between rounded-3xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 hover:border-[#9D00FF] dark:hover:border-[#9D00FF] p-6 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden"
-              >
-                <div className="flex items-center space-x-4">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.color} p-0.5 shadow-md group-hover:scale-110 transition-transform`}>
-                    <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[14px] flex items-center justify-center">
-                      <IconComponent className="w-7 h-7 text-[#9D00FF] dark:text-[#c06eff]" />
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-[#9D00FF] dark:group-hover:text-[#c06eff] transition-colors">
-                      {cat.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">{cat.subtitle}</p>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <span className={`px-3 py-1.5 rounded-full text-xs font-bold border ${cat.badgeColor}`}>
-                    {cat.count} File{cat.count !== 1 ? 's' : ''}
+          {/* Category Tabs (All Resources default selected) */}
+          <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
+            {categories.map((cat) => {
+              const IconComp = cat.icon;
+              const isSelected = selectedCategoryTab === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategoryTab(cat.id)}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                    isSelected
+                      ? 'bg-gradient-to-r from-[#9D00FF] to-[#7c00cc] text-white shadow-md shadow-[#9D00FF]/20'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                  }`}
+                >
+                  <IconComp className="w-3.5 h-3.5" />
+                  <span>{cat.title}</span>
+                  <span className={`px-1.5 py-0.2 text-[10px] font-bold rounded-full ${
+                    isSelected
+                      ? 'bg-white/20 text-white'
+                      : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                  }`}>
+                    {cat.count}
                   </span>
-                </div>
-              </div>
-            );
-          })}
+                </button>
+              );
+            })}
+          </div>
         </div>
+
+        {/* Resources Grid */}
+        {displayedResources.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {displayedResources.map((res) => (
+              <ResourceCard key={res.id} resource={res} />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 rounded-3xl p-10 text-center shadow-md space-y-3">
+            <div className="w-14 h-14 rounded-2xl bg-[#9D00FF]/10 dark:bg-[#9D00FF]/20 border border-[#9D00FF]/30 flex items-center justify-center text-[#9D00FF] dark:text-[#c06eff] mx-auto">
+              <Search className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">
+                No Resources Found
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                {selectedCategoryTab === 'all' 
+                  ? 'No study materials uploaded for this instructor yet.'
+                  : `No files uploaded in the "${categories.find(c => c.id === selectedCategoryTab)?.title}" category yet.`
+                }
+              </p>
+            </div>
+            {selectedCategoryTab !== 'all' && (
+              <button
+                onClick={() => setSelectedCategoryTab('all')}
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
+              >
+                Show All Resources
+              </button>
+            )}
+          </div>
+        )}
       </section>
     </div>
   );
