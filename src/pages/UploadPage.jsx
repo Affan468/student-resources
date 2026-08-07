@@ -12,7 +12,7 @@ import {
   AlertTriangle 
 } from 'lucide-react';
 import { uploadDocumentFile } from '../services/cloudStorage';
-import { validateFileSize, calculateFileHash } from '../services/fileCompressor';
+import { validateFileSize } from '../services/fileCompressor';
 import SearchableSelect from '../components/common/SearchableSelect';
 import useSEO from '../hooks/useSEO';
 
@@ -26,7 +26,6 @@ export default function UploadPage() {
     courses, 
     instructors, 
     getInstructorsForCourse, 
-    checkDuplicateUpload, 
     checkMatchingTitleWarning,
     submitUpload, 
     navigateTo 
@@ -43,7 +42,6 @@ export default function UploadPage() {
   });
 
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileHash, setFileHash] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [fileError, setFileError] = useState('');
@@ -84,26 +82,12 @@ export default function UploadPage() {
     }
   }, [formData.courseId, availableInstructors]);
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const validation = validateFileSize(file);
       if (!validation.valid) {
         setFileError(validation.error);
-        setSelectedFile(null);
-        setFileHash('');
-        e.target.value = '';
-        return;
-      }
-
-      // Calculate SHA-256 fingerprint hash of binary file
-      const hash = await calculateFileHash(file);
-      setFileHash(hash);
-
-      // Check if exact binary duplicate document already exists in DB/context
-      const dupCheck = checkDuplicateUpload(hash, formData.courseId, formData.title, formData.category, formData.instructorId);
-      if (dupCheck.isDuplicate) {
-        setFileError(`⚠️ Duplicate Binary File: ${dupCheck.reason}`);
         setSelectedFile(null);
         e.target.value = '';
       } else {
@@ -117,18 +101,6 @@ export default function UploadPage() {
     e.preventDefault();
     if (!formData.title.trim()) {
       alert('Please enter a document title');
-      return;
-    }
-
-    // Final pre-submit duplicate verification
-    let currentHash = fileHash;
-    if (selectedFile && !currentHash) {
-      currentHash = await calculateFileHash(selectedFile);
-    }
-
-    const dupCheck = checkDuplicateUpload(currentHash, formData.courseId, formData.title, formData.category);
-    if (dupCheck.isDuplicate) {
-      setFileError(`⚠️ Duplicate Upload Blocked: ${dupCheck.reason}`);
       return;
     }
 
@@ -153,7 +125,6 @@ export default function UploadPage() {
         fileSize: uploadedFileInfo.fileSize,
         fileType: uploadedFileInfo.fileType,
         url: uploadedFileInfo.url,
-        fileHash: currentHash,
         downloadContent: uploadedFileInfo.downloadContent,
         rawFile: selectedFile // Attach original binary File object
       });

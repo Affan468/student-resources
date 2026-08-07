@@ -336,25 +336,6 @@ export function ResourceProvider({ children }) {
     return null;
   };
 
-  // Check for duplicate uploads by SHA-256 binary hash or title warning
-  const checkDuplicateUpload = (fileHash, courseId, title, category, instructorId = null) => {
-    // 1. Check SHA-256 exact binary file match (hard block identical binary files)
-    if (fileHash) {
-      const matchHash = [...resources, ...pendingUploads].find(r => r.fileHash && r.fileHash === fileHash);
-      if (matchHash) {
-        return { isDuplicate: true, reason: `Exact identical PDF binary file already uploaded ("${matchHash.title}")` };
-      }
-    }
-
-    // 2. Check Course + Instructor + Category + Title match (warning only)
-    const titleWarn = checkMatchingTitleWarning(courseId, instructorId, category, title);
-    if (titleWarn) {
-      return { isDuplicate: false, hasWarning: true, reason: titleWarn.reason, existingTitle: titleWarn.existingTitle };
-    }
-
-    return { isDuplicate: false, hasWarning: false };
-  };
-
   // Submit student upload (enters pending queue)
   const submitUpload = (uploadData) => {
     const uploadId = `upload-${Date.now()}`;
@@ -380,7 +361,6 @@ export function ResourceProvider({ children }) {
       notes: uploadData.notes || '',
       createdAt: new Date().toISOString().split('T')[0],
       downloadsCount: 0,
-      fileHash: uploadData.fileHash || null,
       url: uploadData.url || '',
       rawFile: uploadData.rawFile || null,
       downloadContent: uploadData.downloadContent || `Content for ${uploadData.title}`
@@ -678,7 +658,6 @@ export function ResourceProvider({ children }) {
       getInstructorsForCourse,
       getInstructorResources,
       getCategoryResources,
-      checkDuplicateUpload,
       checkMatchingTitleWarning,
       submitUpload,
       approveUpload,

@@ -51,20 +51,19 @@ export async function uploadDocumentFile(file) {
   const fileExt = targetFile.name.split('.').pop() || 'pdf';
 
   // 1. Try Cloudflare R2 Storage Bucket first (Fast 10GB Free Storage)
-  if (isR2Configured) {
-    try {
-      const r2Result = await uploadFileToR2(targetFile);
-      if (r2Result && r2Result.url) {
-        return {
-          ...r2Result,
-          originalSizeMB,
-          compressedSizeMB,
-          reductionPercent
-        };
-      }
-    } catch (err) {
-      console.warn('Cloudflare R2 upload bypassed, falling back to Supabase:', err);
+  try {
+    const r2Result = await uploadFileToR2(targetFile);
+    if (r2Result && r2Result.url) {
+      console.log('[COMSATS Vault] Uploaded to Cloudflare R2 successfully:', r2Result.url);
+      return {
+        ...r2Result,
+        originalSizeMB,
+        compressedSizeMB,
+        reductionPercent
+      };
     }
+  } catch (err) {
+    console.warn('Cloudflare R2 upload bypassed, attempting Supabase fallback:', err);
   }
 
   // 2. Try Supabase Cloud Storage bucket fallback

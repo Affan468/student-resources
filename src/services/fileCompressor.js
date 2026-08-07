@@ -23,23 +23,6 @@ export function validateFileSize(file) {
 }
 
 /**
- * Generates a SHA-256 cryptographic hash fingerprint for a file
- * @param {File | Blob} file
- * @returns {Promise<string>} 64-character hex hash string
- */
-export async function calculateFileHash(file) {
-  try {
-    const arrayBuffer = await file.arrayBuffer();
-    const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  } catch (err) {
-    console.warn('SHA-256 calculation fallback:', err);
-    return `hash-${file.name}-${file.size}`;
-  }
-}
-
-/**
  * Ultra-High Ratio Canvas Image Compression (~90% size reduction target)
  * @param {File} file 
  * @param {number} quality 0.0 - 1.0 (default 0.35 for ~200 KB output targets)

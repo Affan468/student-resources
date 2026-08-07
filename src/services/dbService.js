@@ -31,7 +31,6 @@ export async function fetchResourcesFromSupabase() {
       uploaderName: row.uploader_name,
       url: row.url,
       downloadsCount: row.downloads_count || 0,
-      fileHash: row.file_hash || null,
       status: row.status ? row.status : (String(row.id).startsWith('upload-') || String(row.id).startsWith('pending-') ? 'pending' : 'approved'),
       createdAt: row.created_at ? new Date(row.created_at).toLocaleDateString() : new Date().toLocaleDateString()
     }));
@@ -62,7 +61,6 @@ export async function saveResourceToSupabase(resource) {
       url: (resource.url && resource.url.startsWith('data:')) ? '' : (resource.url || ''),
       status: resource.status || (String(resource.id).startsWith('upload-') ? 'pending' : 'approved'),
       downloads_count: resource.downloadsCount || 0,
-      file_hash: resource.fileHash || null,
       created_at: new Date().toISOString()
     };
 
@@ -71,17 +69,6 @@ export async function saveResourceToSupabase(resource) {
       .upsert([dbPayload], { onConflict: 'id' });
 
     if (error) {
-      // If the error is about the file_hash column not existing, retry without it
-      if (error.message && (error.message.includes('file_hash') || error.message.includes('column'))) {
-        console.warn('Retrying save without file_hash column:', error.message);
-        const { file_hash, ...payloadWithoutHash } = dbPayload;
-        const { error: retryError } = await supabase
-          .from('resources')
-          .upsert([payloadWithoutHash], { onConflict: 'id' });
-        if (retryError) throw retryError;
-        console.log('Successfully saved resource to Supabase DB (without file_hash)!');
-        return true;
-      }
       throw error;
     }
 
