@@ -18,7 +18,8 @@ export function getR2Config() {
       credentials: {
         accessKeyId: ACCESS_KEY_ID,
         secretAccessKey: SECRET_ACCESS_KEY
-      }
+      },
+      forcePathStyle: true
     });
   }
 
