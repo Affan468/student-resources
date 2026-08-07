@@ -82,7 +82,7 @@ export async function uploadDocumentFile(file) {
       const filePath = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       const { data, error } = await supabase.storage
         .from('comsats-resources')
-        .upload(filePath, file, { upsert: true });
+        .upload(filePath, targetFile, { upsert: true, contentType: targetFile.type || 'application/pdf' });
 
       if (!error && data) {
         const { data: publicUrlData } = supabase.storage

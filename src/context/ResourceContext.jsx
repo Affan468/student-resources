@@ -90,13 +90,13 @@ export function ResourceProvider({ children }) {
         const remoteResources = await fetchResourcesFromSupabase();
         if (remoteResources && remoteResources.length > 0) {
           console.log('[COMSATS Vault] Remote Resources Loaded from Supabase DB:', remoteResources.length);
-          const approved = remoteResources.filter(r => r.status === 'approved' && !String(r.id).startsWith('upload-'));
-          const pending = remoteResources.filter(r => r.status === 'pending' || String(r.id).startsWith('upload-'));
+          const approved = remoteResources.filter(r => r.status === 'approved');
+          const pending = remoteResources.filter(r => r.status === 'pending');
           setResources(approved);
-          setPendingUploads(prevPending => deduplicateById([...pending, ...prevPending.filter(p => p.status === 'pending')]));
+          setPendingUploads(pending);
         } else {
-          // Auto-sync initial resources & pending uploads to Supabase
-          syncAllResourcesToSupabase([...INITIAL_RESOURCES, ...INITIAL_PENDING_UPLOADS]);
+          // Auto-sync initial resources to Supabase
+          syncAllResourcesToSupabase(INITIAL_RESOURCES);
         }
       } catch (e) {
         console.warn('Supabase resources fetch warning:', e);
@@ -140,9 +140,9 @@ export function ResourceProvider({ children }) {
   const [pendingUploads, setPendingUploads] = useState(() => {
     try {
       const saved = localStorage.getItem('comsats_pending_uploads');
-      return saved ? JSON.parse(saved) : INITIAL_PENDING_UPLOADS;
+      return saved ? JSON.parse(saved) : [];
     } catch (e) {
-      return INITIAL_PENDING_UPLOADS;
+      return [];
     }
   });
 

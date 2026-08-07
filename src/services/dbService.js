@@ -31,7 +31,7 @@ export async function fetchResourcesFromSupabase() {
       uploaderName: row.uploader_name,
       url: row.url,
       downloadsCount: row.downloads_count || 0,
-      status: row.status ? row.status : (String(row.id).startsWith('upload-') || String(row.id).startsWith('pending-') ? 'pending' : 'approved'),
+      status: row.status ? row.status : 'approved',
       createdAt: row.created_at ? new Date(row.created_at).toLocaleDateString() : new Date().toLocaleDateString()
     }));
   } catch (err) {
