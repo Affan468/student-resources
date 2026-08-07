@@ -48,11 +48,13 @@ CREATE TABLE IF NOT EXISTS public.resources (
     url TEXT DEFAULT '',
     status TEXT DEFAULT 'approved',
     downloads_count INTEGER DEFAULT 0,
+    file_hash TEXT DEFAULT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 
 -- Migration Helper for Existing Databases
 ALTER TABLE public.resources ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'approved';
+ALTER TABLE public.resources ADD COLUMN IF NOT EXISTS file_hash TEXT DEFAULT NULL;
 
 -- 4. Enable Row Level Security (RLS) & Allow Anonymous Read/Write Access
 ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;

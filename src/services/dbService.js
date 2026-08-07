@@ -70,7 +70,20 @@ export async function saveResourceToSupabase(resource) {
       .from('resources')
       .upsert([dbPayload], { onConflict: 'id' });
 
-    if (error) throw error;
+    if (error) {
+      // If the error is about the file_hash column not existing, retry without it
+      if (error.message && (error.message.includes('file_hash') || error.message.includes('column'))) {
+        console.warn('Retrying save without file_hash column:', error.message);
+        const { file_hash, ...payloadWithoutHash } = dbPayload;
+        const { error: retryError } = await supabase
+          .from('resources')
+          .upsert([payloadWithoutHash], { onConflict: 'id' });
+        if (retryError) throw retryError;
+        console.log('Successfully saved resource to Supabase DB (without file_hash)!');
+        return true;
+      }
+      throw error;
+    }
 
     console.log('Successfully saved resource metadata to Supabase DB!');
     return true;
