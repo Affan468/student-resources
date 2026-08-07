@@ -17,10 +17,10 @@ export default function Footer() {
                   <Globe className="w-4 h-4" />
                 </div>
               </div>
-              <span className="font-bold text-base text-slate-900 dark:text-white">COMSATS Resource Portal</span>
+              <span className="font-bold text-base text-slate-900 dark:text-white">Comscad Resource Portal</span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-md">
-              Official open-access hub for COMSATS University students to find past exam papers, sessional quizzes, assignment solutions, and lab manuals organized by course and instructor.
+              Official open-access hub for Comscad students to find past exam papers, sessional quizzes, assignment solutions, and lab manuals organized by course and instructor.
             </p>
           </div>
 
@@ -61,7 +61,7 @@ export default function Footer() {
 
         <div className="border-t border-slate-200 dark:border-slate-800 pt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <p className="flex items-center gap-1.5">
-            <span>© {new Date().getFullYear()} COMSATS University Islamabad Resource Hub.</span>
+            <span>© {new Date().getFullYear()} Comscad Resource Hub.</span>
             <button
               onClick={() => navigateTo('admin')}
               className="text-slate-300 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-0.5"
@@ -71,7 +71,7 @@ export default function Footer() {
             </button>
           </p>
           <p className="flex items-center gap-1 mt-1 sm:mt-0">
-            Designed for <span className="text-[#9D00FF] dark:text-[#c06eff] font-semibold">COMSATS Students</span>
+            Designed for <span className="text-[#9D00FF] dark:text-[#c06eff] font-semibold">Comscad Students</span>
           </p>
         </div>
       </div>

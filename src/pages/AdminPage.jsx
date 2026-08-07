@@ -141,7 +141,7 @@ export default function AdminPage() {
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#9D00FF]/10 dark:bg-[#9D00FF]/20 border border-[#9D00FF]/30 text-[#9D00FF] dark:text-[#c06eff] text-xs font-semibold">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>COMSATS Resource Moderation Portal</span>
+              <span>Comscad Resource Moderation Portal</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Admin Dashboard & Catalog Manager</h1>
             <p className="text-xs text-slate-500 dark:text-slate-400">

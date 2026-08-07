@@ -88,7 +88,7 @@ export default function HomePage() {
         <div className="relative z-10 max-w-2xl mx-auto text-center space-y-3 sm:space-y-4">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#9D00FF]/10 dark:bg-[#9D00FF]/20 border border-[#9D00FF]/20 dark:border-[#9D00FF]/40 text-[#9D00FF] dark:text-[#c06eff] text-[11px] sm:text-xs font-semibold">
             <Globe className="w-3.5 h-3.5 text-[#59a5fb] dark:text-[#7bb9fc]" />
-            <span>COMSATS Engineering Resource Portal (CE • EE • EEE)</span>
+            <span>Comscad Engineering Resource Portal (CE • EE • EEE)</span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">

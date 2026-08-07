@@ -48,7 +48,7 @@ export default function Navbar() {
             <div>
               <div className="flex items-center gap-1">
                 <span className="font-extrabold text-lg sm:text-xl tracking-tight bg-gradient-to-r from-[#59a5fb] to-[#9D00FF] bg-clip-text text-transparent">
-                  COMSATS Hub
+                  Comscad
                 </span>
                 <span className="bg-[#9D00FF]/10 dark:bg-[#9D00FF]/20 text-[#9D00FF] dark:text-[#c06eff] border border-[#9D00FF]/20 dark:border-[#9D00FF]/40 text-[9px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-0.5">
                   <Sparkles className="w-2.5 h-2.5 text-[#9D00FF] dark:text-[#c06eff]" /> Portal
