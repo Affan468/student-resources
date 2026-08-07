@@ -8,7 +8,8 @@ import {
   Calendar, 
   Tag, 
   CheckCircle2, 
-  Loader2 
+  Loader2,
+  AlertTriangle 
 } from 'lucide-react';
 import { uploadDocumentFile } from '../services/cloudStorage';
 import { validateFileSize, calculateFileHash } from '../services/fileCompressor';
@@ -26,6 +27,7 @@ export default function UploadPage() {
     instructors, 
     getInstructorsForCourse, 
     checkDuplicateUpload, 
+    checkMatchingTitleWarning,
     submitUpload, 
     navigateTo 
   } = useResource();
@@ -45,6 +47,14 @@ export default function UploadPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [fileError, setFileError] = useState('');
+
+  // Real-time title match warning for specific selected directory (course + instructor + category)
+  const titleWarning = checkMatchingTitleWarning(
+    formData.courseId, 
+    formData.instructorId, 
+    formData.category, 
+    formData.title
+  );
 
   // Dynamically update instructor options based on selected course
   const courseInstructors = getInstructorsForCourse(formData.courseId);
@@ -90,10 +100,10 @@ export default function UploadPage() {
       const hash = await calculateFileHash(file);
       setFileHash(hash);
 
-      // Check if duplicate document already exists in DB/context
-      const dupCheck = checkDuplicateUpload(hash, formData.courseId, formData.title, formData.category);
+      // Check if exact binary duplicate document already exists in DB/context
+      const dupCheck = checkDuplicateUpload(hash, formData.courseId, formData.title, formData.category, formData.instructorId);
       if (dupCheck.isDuplicate) {
-        setFileError(`⚠️ Duplicate Upload: ${dupCheck.reason}`);
+        setFileError(`⚠️ Duplicate Binary File: ${dupCheck.reason}`);
         setSelectedFile(null);
         e.target.value = '';
       } else {
@@ -256,8 +266,24 @@ export default function UploadPage() {
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             required
-            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#59a5fb]"
+            className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+              titleWarning
+                ? 'border-amber-400 dark:border-amber-500 focus:ring-amber-400'
+                : 'border-slate-200 dark:border-slate-700 focus:ring-[#59a5fb]'
+            }`}
           />
+          {titleWarning && (
+            <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700/80 text-amber-900 dark:text-amber-300 text-xs leading-relaxed animate-fade-in">
+              <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold">Title Warning: </span>
+                <span>{titleWarning.reason}</span>
+                <span className="block mt-1 text-[11px] text-amber-700 dark:text-amber-400 font-medium">
+                  ℹ️ If your document is a different version or updated solution, you are still allowed to upload it below.
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* File Dropzone */}

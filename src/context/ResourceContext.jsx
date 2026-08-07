@@ -287,31 +287,77 @@ export function ResourceProvider({ children }) {
     );
   };
 
-  // Check for duplicate uploads by SHA-256 hash or normalized title
-  const checkDuplicateUpload = (fileHash, courseId, title, category) => {
-    const normTitle = (title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  // Check matching title warning for specific directory (courseId + instructorId + category)
+  const checkMatchingTitleWarning = (courseId, instructorId, category, title) => {
+    if (!title || !title.trim()) return null;
+    const normInput = title.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (normInput.length < 3) return null;
 
-    // 1. Check SHA-256 exact binary file match
+    const allDocs = [...resources, ...pendingUploads];
+    const targetDocs = allDocs.filter(r => 
+      (courseId ? r.courseId === courseId : true) &&
+      (instructorId ? r.instructorId === instructorId : true) &&
+      (category ? r.category === category : true)
+    );
+
+    for (const doc of targetDocs) {
+      if (!doc.title) continue;
+      const normExisting = doc.title.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+      // 1. Exact normalized title match
+      if (normInput === normExisting) {
+        return {
+          hasWarning: true,
+          existingTitle: doc.title,
+          reason: `A document titled "${doc.title}" already exists in this directory for the selected course, instructor & category.`
+        };
+      }
+
+      // 2. 9+ letter substring or containment match
+      if (normInput.length >= 6 && normExisting.length >= 6) {
+        if (normExisting.includes(normInput) || normInput.includes(normExisting)) {
+          return {
+            hasWarning: true,
+            existingTitle: doc.title,
+            reason: `A document with a similar title "${doc.title}" already exists for this instructor and category.`
+          };
+        }
+
+        if (normInput.length >= 9 && normExisting.length >= 9) {
+          for (let i = 0; i <= normInput.length - 9; i++) {
+            const subStr = normInput.substring(i, i + 9);
+            if (normExisting.includes(subStr)) {
+              return {
+                hasWarning: true,
+                existingTitle: doc.title,
+                reason: `A document titled "${doc.title}" has a matching title sequence in this directory.`
+              };
+            }
+          }
+        }
+      }
+    }
+
+    return null;
+  };
+
+  // Check for duplicate uploads by SHA-256 binary hash or title warning
+  const checkDuplicateUpload = (fileHash, courseId, title, category, instructorId = null) => {
+    // 1. Check SHA-256 exact binary file match (hard block identical binary files)
     if (fileHash) {
       const matchHash = [...resources, ...pendingUploads].find(r => r.fileHash && r.fileHash === fileHash);
       if (matchHash) {
-        return { isDuplicate: true, reason: `Exact identical PDF file already uploaded ("${matchHash.title}")` };
+        return { isDuplicate: true, reason: `Exact identical PDF binary file already uploaded ("${matchHash.title}")` };
       }
     }
 
-    // 2. Check Course + Category + Normalized Title match
-    if (normTitle && courseId) {
-      const matchTitle = [...resources, ...pendingUploads].find(r => 
-        r.courseId === courseId && 
-        r.category === category && 
-        (r.title || '').toLowerCase().replace(/[^a-z0-9]/g, '') === normTitle
-      );
-      if (matchTitle) {
-        return { isDuplicate: true, reason: `A document titled "${matchTitle.title}" already exists for this course` };
-      }
+    // 2. Check Course + Instructor + Category + Title match (warning only)
+    const titleWarn = checkMatchingTitleWarning(courseId, instructorId, category, title);
+    if (titleWarn) {
+      return { isDuplicate: false, hasWarning: true, reason: titleWarn.reason, existingTitle: titleWarn.existingTitle };
     }
 
-    return { isDuplicate: false };
+    return { isDuplicate: false, hasWarning: false };
   };
 
   // Submit student upload (enters pending queue)
@@ -638,6 +684,7 @@ export function ResourceProvider({ children }) {
       getInstructorResources,
       getCategoryResources,
       checkDuplicateUpload,
+      checkMatchingTitleWarning,
       submitUpload,
       approveUpload,
       rejectUpload,
