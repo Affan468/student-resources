@@ -9,7 +9,7 @@ export function ThemeProvider({ children }) {
     if (saved === 'light' || saved === 'dark') {
       return saved;
     }
-    return 'system';
+    return 'light';
   });
 
   // Effective theme: 'light' or 'dark'
