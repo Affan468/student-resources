@@ -131,10 +131,13 @@ export function ResourceProvider({ children }) {
     
     loadRemoteData();
 
-
     const handleFocus = () => loadRemoteData();
+    const syncInterval = setInterval(() => loadRemoteData(), 10000);
     window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(syncInterval);
+    };
   }, []);
 
   const [pendingUploads, setPendingUploads] = useState(() => {
