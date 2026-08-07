@@ -58,7 +58,7 @@ export async function saveResourceToSupabase(resource) {
       file_size: resource.fileSize || '1.5 MB',
       file_type: resource.fileType || 'pdf',
       uploader_name: resource.uploaderName || 'Student',
-      url: (resource.url && resource.url.startsWith('data:')) ? '' : (resource.url || ''),
+      url: resource.url || '',
       status: resource.status || (String(resource.id).startsWith('upload-') ? 'pending' : 'approved'),
       downloads_count: resource.downloadsCount || 0,
       created_at: new Date().toISOString()

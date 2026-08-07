@@ -117,7 +117,7 @@ export default function UploadPage() {
             downloadContent: `Uploaded Document: ${formData.title}\nNotes: ${formData.notes}`
           };
 
-      submitUpload({
+      await submitUpload({
         ...formData,
         uploaderName: 'Student',
         uploaderEmail: '',

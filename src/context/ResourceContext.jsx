@@ -337,7 +337,7 @@ export function ResourceProvider({ children }) {
   };
 
   // Submit student upload (enters pending queue)
-  const submitUpload = (uploadData) => {
+  const submitUpload = async (uploadData) => {
     const uploadId = `upload-${Date.now()}`;
 
     if (uploadData.rawFile) {
@@ -369,7 +369,12 @@ export function ResourceProvider({ children }) {
     setPendingUploads(prev => [newUpload, ...prev]);
 
     // Save to Supabase SQL Database as pending approval
-    saveResourceToSupabase(newUpload);
+    const saved = await saveResourceToSupabase(newUpload);
+    if (saved) {
+      console.log('[COMSATS Vault] Successfully saved pending resource upload to Supabase DB');
+    } else {
+      console.warn('[COMSATS Vault] Failed to save resource upload to Supabase DB');
+    }
 
     showToast('Document uploaded successfully! Submitted for Admin approval.', 'success');
   };
