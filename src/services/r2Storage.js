@@ -18,8 +18,7 @@ export function getR2Config() {
       credentials: {
         accessKeyId: ACCESS_KEY_ID,
         secretAccessKey: SECRET_ACCESS_KEY
-      },
-      forcePathStyle: true
+      }
     });
   }
 
@@ -50,11 +49,11 @@ export async function uploadFileToR2(file) {
   const uniqueKey = `resources/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
   try {
-    const arrayBuffer = await file.arrayBuffer();
+    const fileBytes = new Uint8Array(await file.arrayBuffer());
     const command = new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: uniqueKey,
-      Body: new Uint8Array(arrayBuffer),
+      Body: fileBytes,
       ContentType: file.type || 'application/pdf'
     });
 
