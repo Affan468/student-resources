@@ -32,7 +32,7 @@ export async function fetchResourcesFromSupabase() {
       url: row.url,
       downloadsCount: row.downloads_count || 0,
       fileHash: row.file_hash || null,
-      status: row.status || 'approved',
+      status: row.status ? row.status : (String(row.id).startsWith('upload-') || String(row.id).startsWith('pending-') ? 'pending' : 'approved'),
       createdAt: row.created_at ? new Date(row.created_at).toLocaleDateString() : new Date().toLocaleDateString()
     }));
   } catch (err) {
@@ -60,7 +60,7 @@ export async function saveResourceToSupabase(resource) {
       file_type: resource.fileType || 'pdf',
       uploader_name: resource.uploaderName || 'Student',
       url: (resource.url && resource.url.startsWith('data:')) ? '' : (resource.url || ''),
-      status: resource.status || 'approved',
+      status: resource.status || (String(resource.id).startsWith('upload-') ? 'pending' : 'approved'),
       downloads_count: resource.downloadsCount || 0,
       file_hash: resource.fileHash || null,
       created_at: new Date().toISOString()

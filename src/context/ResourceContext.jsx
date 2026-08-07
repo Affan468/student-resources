@@ -90,10 +90,10 @@ export function ResourceProvider({ children }) {
         const remoteResources = await fetchResourcesFromSupabase();
         if (remoteResources && remoteResources.length > 0) {
           console.log('[COMSATS Vault] Remote Resources Loaded from Supabase DB:', remoteResources.length);
-          const approved = remoteResources.filter(r => r.status === 'approved' || !r.status);
-          const pending = remoteResources.filter(r => r.status === 'pending');
+          const approved = remoteResources.filter(r => r.status === 'approved' && !String(r.id).startsWith('upload-'));
+          const pending = remoteResources.filter(r => r.status === 'pending' || String(r.id).startsWith('upload-'));
           setResources(approved);
-          setPendingUploads(pending);
+          setPendingUploads(prevPending => deduplicateById([...pending, ...prevPending.filter(p => p.status === 'pending')]));
         } else {
           // Auto-sync initial resources & pending uploads to Supabase
           syncAllResourcesToSupabase([...INITIAL_RESOURCES, ...INITIAL_PENDING_UPLOADS]);
