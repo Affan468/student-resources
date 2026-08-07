@@ -293,6 +293,8 @@ export function ResourceProvider({ children }) {
     const normInput = title.toLowerCase().replace(/[^a-z0-9]/g, '');
     if (normInput.length < 3) return null;
 
+    const inputNumbers = (title.match(/\d+/g) || []).join('');
+
     const allDocs = [...resources, ...pendingUploads];
     const targetDocs = allDocs.filter(r => 
       (courseId ? r.courseId === courseId : true) &&
@@ -303,6 +305,12 @@ export function ResourceProvider({ children }) {
     for (const doc of targetDocs) {
       if (!doc.title) continue;
       const normExisting = doc.title.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const existingNumbers = (doc.title.match(/\d+/g) || []).join('');
+
+      // If both titles contain numbers and the numbers differ (e.g. assignment 2 vs assignment 1), skip warning!
+      if (inputNumbers && existingNumbers && inputNumbers !== existingNumbers) {
+        continue;
+      }
 
       // 1. Exact normalized title match
       if (normInput === normExisting) {
@@ -313,7 +321,7 @@ export function ResourceProvider({ children }) {
         };
       }
 
-      // 2. 9+ letter substring or containment match
+      // 2. Title containment match (e.g. "assignment 1 solved" vs "assignment 1")
       if (normInput.length >= 6 && normExisting.length >= 6) {
         if (normExisting.includes(normInput) || normInput.includes(normExisting)) {
           return {
@@ -321,19 +329,6 @@ export function ResourceProvider({ children }) {
             existingTitle: doc.title,
             reason: `A document with a similar title "${doc.title}" already exists for this instructor and category.`
           };
-        }
-
-        if (normInput.length >= 9 && normExisting.length >= 9) {
-          for (let i = 0; i <= normInput.length - 9; i++) {
-            const subStr = normInput.substring(i, i + 9);
-            if (normExisting.includes(subStr)) {
-              return {
-                hasWarning: true,
-                existingTitle: doc.title,
-                reason: `A document titled "${doc.title}" has a matching title sequence in this directory.`
-              };
-            }
-          }
         }
       }
     }
